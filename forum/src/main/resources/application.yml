@@ -1,0 +1,13 @@
+server:
+  port: 9001
+spring:
+  data:
+    redis:
+      host: 10.80.42.189
+      password: rememberus
+      database: 12
+  datasource:
+    url: jdbc:mysql://10.80.42.189:3306/forum_dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: dev
+    password: rememberus1nthedayofend
