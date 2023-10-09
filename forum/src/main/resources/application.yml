@@ -12,6 +12,6 @@ spring:
     username: dev
     password: rememberus1nthedayofend
 
-logging:
-  level:
-    org.tongji.programming.mapper: debug
+#logging:
+#  level:
+#    org.tongji.programming.mapper: debug

@@ -17,60 +17,58 @@ import lombok.Data;
 @Data
 public class Homework implements Serializable {
     /**
-     * 
+     *
      */
-    @TableId
     private String hwTerm;
 
     /**
-     * 
+     *
      */
-    @TableId
     private String hwCcode;
 
     /**
-     * 
+     *
      */
     @TableId
     private String hwId;
 
     /**
-     * 
+     *
      */
     private Integer hwWeek;
 
     /**
-     * 
+     *
      */
     private Integer hwChapter;
 
     /**
-     * 
+     *
      */
     private String hwFilename;
 
     /**
-     * 
+     *
      */
     private String hwDescription;
 
     /**
-     * 
+     *
      */
     private Date hwBdate;
 
     /**
-     * 
+     *
      */
     private Date hwEdate;
 
     /**
-     * 
+     *
      */
     private BigDecimal hwScore;
 
     /**
-     * 
+     *
      */
     private Date hwDateAdd;
 

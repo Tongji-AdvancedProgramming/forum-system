@@ -28,8 +28,13 @@
                 你也许正在使用浏览器调试我们的API，又或者你正在开发爬虫或者别的什么东西。Anyway，这里没有什么好藏的，请访问吧。
             </p>
 
+            <!--            <p class="small">-->
+            <!--                还有：如果你需要我们的API文档，可以在登录之后访问这个端点（生产版本中可能需要加上/api或者其他前缀）：<a href="/swagger-ui/index.html#/">/swagger-ui/index.html</a>-->
+            <!--            </p>-->
+
             <p class="small">
-                还有：如果你需要我们的API文档，可以在登录之后访问这个端点（生产版本中可能需要加上/api或者其他前缀）：<a href="/swagger-ui/index.html#/">/swagger-ui/index.html</a>
+                我们的登录接口需要验证图形验证码，这是为了防止你把你的程序拿去售卖，或者做一些学习范畴以外的事情。对爬虫爱好者，你只需要手动登录，
+                然后把Cookies复制进爬虫程序就可以了。Session的有效期足够你用。
             </p>
         </div>
 
@@ -40,6 +45,11 @@
         <p>
             <label for="password" class="sr-only">密码</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="密码" required>
+        </p>
+        <p style="display: flex;gap: 0.5em">
+            <label for="code" class="sr-only">验证码</label>
+            <input type="text" id="code" name="code" class="form-control" placeholder="验证码" required>
+            <img src="/captcha" width="130px" height="48px" alt=""/>
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
     </form>
@@ -52,6 +62,7 @@
                 但是你应当谨慎调用，切勿滥用，否则可能会被封禁账号、上报教师，滥用接口
                 对系统造成严重破坏的，教师可能会上报学院/学校。请君自重。
             </p>
+            <p style="text-align: right">———— Cinea 2023.10.9</p>
         </div>
         <div style="flex-grow: 1"></div>
     </div>

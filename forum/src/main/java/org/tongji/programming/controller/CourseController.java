@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tongji.programming.dto.ApiDataResponse;
+import org.tongji.programming.dto.CourseTree;
 import org.tongji.programming.pojo.Course;
+import org.tongji.programming.service.CourseService;
 import org.tongji.programming.service.UserCourseService;
 
-import javax.annotation.concurrent.Immutable;
 import java.security.Principal;
 import java.util.List;
 
@@ -34,6 +35,13 @@ public class CourseController {
     @Autowired
     public void setUserCourseService(UserCourseService userCourseService) {
         this.userCourseService = userCourseService;
+    }
+
+    CourseService courseService;
+
+    @Autowired
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
     }
 
     @Secured("ROLE_USER")
@@ -67,6 +75,17 @@ public class CourseController {
     protected ApiDataResponse<List<ImmutableList<String>>> getMyCourseCodes(Principal principal) {
         var id = principal.getName();
         return ApiDataResponse.success(userCourseService.getCourseCodes(id));
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "获取课程树",
+            description = "课程树包含了课程、班级、周次和作业等信息"
+    )
+    @RequestMapping(value = "/tree", method = RequestMethod.GET)
+    protected ApiDataResponse<CourseTree> getCourseTree(Principal principal) {
+        var id = principal.getName();
+        return ApiDataResponse.success(courseService.getCoursesTree(id));
     }
 
 }
