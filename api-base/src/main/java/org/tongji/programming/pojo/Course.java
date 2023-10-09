@@ -15,34 +15,32 @@ import lombok.Data;
 @Data
 public class Course implements Serializable {
     /**
-     * 
+     *
      */
-    @TableId
     private String courseTerm;
 
     /**
-     * 
+     *
      */
-    @TableId
     private String courseNo;
 
     /**
-     * 
+     *
      */
     private String courseCode;
 
     /**
-     * 
+     *
      */
     private String courseFname;
 
     /**
-     * 
+     *
      */
     private String courseSname;
 
     /**
-     * 
+     *
      */
     private String courseType;
 

@@ -3,7 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.tongji.programming.mapper.StudentMapper">
-    <select id="selectByIdPass" resultType="org.tongji.programming.pojo.Student">
-            select * from student where stu_no = #{id} and stu_password = MD5(#{password}) limit 1
+    <select id="selectIdPassLevel" resultType="org.tongji.programming.pojo.Student">
+        select stu_userlevel, stu_password
+        from student
+        where stu_no = #{id}
+        limit 1
+    </select>
+
+    <select id="selectCourses" resultType="org.tongji.programming.pojo.Student">
+        select stu_term, stu_userlevel, stu_cno_1, stu_cno_1_is_del, stu_cno_2, stu_cno_2_is_del, stu_cno_3, stu_cno_3_is_del
+        from student
+        where stu_no = #{id}
+        limit 1
     </select>
 </mapper>

@@ -1,13 +1,19 @@
 package org.tongji.programming.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tongji.programming.mapper.StudentInfoMapper;
 import org.tongji.programming.mapper.StudentMapper;
+import org.tongji.programming.pojo.Course;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.pojo.StudentInfo;
 import org.tongji.programming.service.UserService;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author cinea
@@ -32,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isInfoCompletionNeeded(String userId) {
         var wrapper = new QueryWrapper<StudentInfo>();
-        wrapper.eq("stu_no",userId);
+        wrapper.eq("stu_no", userId);
 
         return !studentInfoMapper.exists(wrapper);
     }

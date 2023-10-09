@@ -8,5 +8,7 @@ import org.tongji.programming.pojo.Student;
  * @author cinea
  */
 public interface StudentMapper extends BaseMapper<Student> {
-    Student selectByIdPass(@Param("id") String id, @Param("password") String password);
+    Student selectIdPassLevel(@Param("id") String id);
+
+    Student selectCourses(@Param("id") String id);
 }

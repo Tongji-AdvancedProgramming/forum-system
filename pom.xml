@@ -12,6 +12,7 @@
     <modules>
         <module>api-base</module>
         <module>user-service</module>
+        <module>course-service</module>
     </modules>
 
     <properties>
