@@ -1,18 +1,25 @@
 package org.tongji.programming.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.tongji.programming.dto.CourseTree;
 import org.tongji.programming.mapper.CourseMapper;
 import org.tongji.programming.mapper.StudentMapper;
 import org.tongji.programming.pojo.Course;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.service.UserCourseService;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -61,8 +68,26 @@ public class UserCourseServiceImpl implements UserCourseService {
         }
     }
 
+    LoadingCache<String, List<ImmutableList<String>>> getCoursesCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .expireAfterWrite(Duration.ofDays(1))
+            .build(new CacheLoader<String, List<ImmutableList<String>>>() {
+                @Override
+                public @NotNull List<ImmutableList<String>> load(@NotNull String key) throws Exception {
+                    return getCoursesLoads(key);
+                }
+            });
+
     @Override
     public List<ImmutableList<String>> getCourses(String userId) {
+        try {
+            return getCoursesCache.get(userId);
+        } catch (ExecutionException e) {
+            return getCoursesLoads(userId);
+        }
+    }
+
+    private List<ImmutableList<String>> getCoursesLoads(String userId) {
         var stu = studentMapper.selectCourses(userId);
         if (stu == null) {
             return new LinkedList<>();

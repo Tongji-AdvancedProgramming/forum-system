@@ -8,4 +8,9 @@
             <foreach collection="item" item="s" open="(" separator="," close=")">#{s}</foreach>
         </foreach>
     </select>
+    <select id="getCourseDetail" resultType="org.tongji.programming.pojo.Course">
+        SELECT * FROM course
+        WHERE (course_term,course_no) IN
+        <foreach collection="courseKey" item="s" open="((" separator="," close="))">#{s}</foreach>
+    </select>
 </mapper>

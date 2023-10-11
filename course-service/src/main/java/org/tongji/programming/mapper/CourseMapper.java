@@ -14,4 +14,6 @@ import java.util.List;
  */
 public interface CourseMapper extends BaseMapper<Course> {
     List<Course> getAllCourseDetail(@Param("courseKeys") List<ImmutableList<String>> courseKeys);
+
+    Course getCourseDetail(@Param("courseKey") ImmutableList<String> courseKey);
 }

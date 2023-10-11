@@ -3,6 +3,7 @@ package org.tongji.programming.controller;
 import io.springboot.captcha.GifCaptcha;
 import io.springboot.captcha.base.Captcha;
 import io.springboot.captcha.utils.CaptchaJakartaUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,11 +33,13 @@ public class CaptchaController {
     }
 
     @GetMapping
+    @Operation(summary = "获取一个验证码")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CaptchaJakartaUtil.out(captcha, request, response);
     }
 
     @PostMapping("/verify")
+    @Operation(summary = "验证验证码")
     public String verifyCaptcha(HttpServletRequest request, @RequestPart String code){
         if(code!=null && CaptchaJakartaUtil.ver(code,request)){
             return "Valid";

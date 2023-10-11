@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
-import org.tongji.programming.helper.RealIpHelper;
+import org.tongji.programming.helper.RequestInfoHelper;
+import org.tongji.programming.mapper.LoggerMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,6 +41,13 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         this.redisTemplate = redisTemplate;
     }
 
+    LoggerMapper loggerMapper;
+
+    @Autowired
+    public void setLoggerMapper(LoggerMapper loggerMapper) {
+        this.loggerMapper = loggerMapper;
+    }
+
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
 
@@ -52,7 +60,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         //*   Part1. 限制流量      *//
         //************************//
 
-        var ip = RealIpHelper.getClientIpAddr(request);
+        var ip = RequestInfoHelper.getClientIpAddr(request);
+        var ua = RequestInfoHelper.getUserAgent(request);
         var key = "forum:login-limit:" + ip;
 
         // 如果超过限制，则拒绝请求
@@ -61,6 +70,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             redisTemplate.expire(key, 60, TimeUnit.SECONDS);
             response.setStatus(429);
             writeResponse(response, tooManyRequests());
+            loggerMapper.logLogin("", ip, ua, "限流拒绝");
             return;
         }
 

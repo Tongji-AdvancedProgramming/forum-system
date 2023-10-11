@@ -1,6 +1,8 @@
 package org.tongji.programming.service;
 
+import com.google.common.collect.ImmutableList;
 import org.tongji.programming.dto.CourseTree;
+import org.tongji.programming.pojo.Course;
 
 import java.util.List;
 
@@ -10,6 +12,8 @@ import java.util.List;
  * @author cinea
  */
 public interface CourseService {
+    List<Course> getCourses(List<ImmutableList<String>> keys);
+
     /**
      * 获取用户有权查看的课程及其以树形式的详细信息
      */
