@@ -21,9 +21,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
 import org.tongji.programming.filter.CustomAuthenticationFilter;
+import org.tongji.programming.helper.RequestInfoHelper;
+import org.tongji.programming.service.LogService;
 
 import java.io.IOException;
 
@@ -54,6 +57,19 @@ public class SecurityConfig {
         this.customAuthenticationFilter = customAuthenticationFilter;
     }
 
+    AuthenticationSuccessHandler authenticationSuccessHandler;
+    AuthenticationFailureHandler authenticationFailureHandler;
+
+    @Autowired
+    public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
+
+    @Autowired
+    public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.authenticationFailureHandler = authenticationFailureHandler;
+    }
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.debug("正在配置HttpSecurity...");
@@ -66,8 +82,8 @@ public class SecurityConfig {
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(config -> config.loginProcessingUrl("/login")
                         .loginPage("/login.html")
-                        .successHandler(authenticationSuccessHandler())  // 自定义成功处理器
-                        .failureHandler(authenticationFailureHandler())  // 自定义失败处理器
+                        .successHandler(authenticationSuccessHandler)  // 自定义成功处理器
+                        .failureHandler(authenticationFailureHandler)  // 自定义失败处理器
                         .permitAll())
                 .exceptionHandling(config -> config.authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
@@ -94,19 +110,17 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    protected AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new forumAuthenticationSuccessHandler();
-    }
-
-    @Bean
-    protected AuthenticationFailureHandler authenticationFailureHandler() {
-        return new forumAuthenticationFailureHandler();
-    }
 }
 
+@Component
 class forumAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    LogService logService;
+
+    @Autowired
+    public void setLogService(LogService logService) {
+        this.logService = logService;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         response.setStatus(200);
@@ -114,19 +128,35 @@ class forumAuthenticationSuccessHandler implements AuthenticationSuccessHandler 
 
         var apiResponse = ApiResponse.success("登录成功");
 
+        var ip = RequestInfoHelper.getClientIpAddr(request);
+        var ua = RequestInfoHelper.getUserAgent(request);
+        logService.logLogin("", ip, ua, "登录成功");
+
         var out = response.getOutputStream();
         out.write(new ObjectMapper().writeValueAsBytes(apiResponse));
         out.close();
     }
 }
 
+@Component
 class forumAuthenticationFailureHandler implements AuthenticationFailureHandler {
+    LogService logService;
+
+    @Autowired
+    public void setLogService(LogService logService) {
+        this.logService = logService;
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         response.setStatus(401);
         response.setContentType("application/json");
 
         var apiResponse = ApiResponse.fail(4001, "用户名或密码错误");
+
+        var ip = RequestInfoHelper.getClientIpAddr(request);
+        var ua = RequestInfoHelper.getUserAgent(request);
+        logService.logLogin("", ip, ua, "用户名密码错");
 
         var out = response.getOutputStream();
         out.write(new ObjectMapper().writeValueAsBytes(apiResponse));

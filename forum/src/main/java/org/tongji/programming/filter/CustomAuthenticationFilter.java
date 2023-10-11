@@ -18,6 +18,7 @@ import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
 import org.tongji.programming.helper.RequestInfoHelper;
 import org.tongji.programming.mapper.LoggerMapper;
+import org.tongji.programming.service.LogService;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -41,11 +42,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         this.redisTemplate = redisTemplate;
     }
 
-    LoggerMapper loggerMapper;
+    LogService logService;
 
     @Autowired
-    public void setLoggerMapper(LoggerMapper loggerMapper) {
-        this.loggerMapper = loggerMapper;
+    public void setLogService(LogService logService) {
+        this.logService = logService;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             redisTemplate.expire(key, 60, TimeUnit.SECONDS);
             response.setStatus(429);
             writeResponse(response, tooManyRequests());
-            loggerMapper.logLogin("", ip, ua, "限流拒绝");
+            logService.logLogin("", ip, ua, "限流拒绝");
             return;
         }
 
@@ -101,6 +102,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                             log.error("{}", e.getLocalizedMessage());
                             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                             writeResponse(response, captchaFailed());
+                            logService.logLogin("", ip, ua, "登录错误");
                         }
                     }
                 }
@@ -108,6 +110,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                 log.error("{}", e.getLocalizedMessage());
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 writeResponse(response, captchaFailed());
+                logService.logLogin("", ip, ua, "登录错误");
             }
         }
         if (code.isEmpty()) {
@@ -118,12 +121,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         if (code.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             writeResponse(response, captchaMissing());
+            logService.logLogin("", ip, ua, "验证码缺失");
         } else {
             if (CaptchaJakartaUtil.ver(code.get(), request)) {
                 filterChain.doFilter(request, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 writeResponse(response, captchaInvalid());
+                logService.logLogin("", ip, ua, "验证码错误");
             }
         }
     }
