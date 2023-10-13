@@ -3,19 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.tongji.programming</groupId>
+        <artifactId>forum-system</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>org.tongji.programming</groupId>
-    <artifactId>forum-system</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>api-base</module>
-        <module>user-service</module>
-        <module>course-service</module>
-        <module>log-service</module>
-        <module>forum-service</module>
-    </modules>
+    <artifactId>forum-service</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -23,4 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.tongji.programming</groupId>
+            <artifactId>course-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

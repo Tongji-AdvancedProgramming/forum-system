@@ -1,5 +1,6 @@
 package org.tongji.programming.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tongji.programming.mapper.LoggerMapper;
@@ -13,6 +14,7 @@ import java.util.concurrent.Executors;
  *
  * @author cineazhan
  */
+@Slf4j
 @Component
 public class LogServiceImpl implements LogService {
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -26,10 +28,17 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void logLogin(String stuNo, String ipAddr, String userAgent, String comment) {
+        // 如果StuNo为空就没必要执行了。这是因为数据库当前设计不支持错误的stuNo。
+        if (stuNo.isEmpty()) return;
+        
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                loggerMapper.logLogin(stuNo, ipAddr, userAgent, comment);
+                try {
+                    loggerMapper.logLogin(stuNo, ipAddr, userAgent, comment);
+                } catch (Exception e) {
+                    log.error("录入登录日志时失败：{}", e.getMessage());
+                }
             }
         });
     }

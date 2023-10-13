@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.tongji.programming.mapper.PostMapper">
+    <select id="getCoursePosts" resultType="org.tongji.programming.pojo.Post">
+        select *
+        from post
+        where post_term = #{term}
+          and post_ccode = #{courseCode}
+          and post_hwup_or_hw_id like concat(#{term}, '-G%') /* 学期-G5位序号-W4位周次 */
+    </select>
+    <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
+        select *
+        from post
+        where post_term = #{term}
+          and post_ccode = #{courseCode}
+          and post_hwup_or_hw_id like concat(#{term}, '-%')
+          and left(post_hwup_or_hw_id, length(concat(#{term}, '-G'))) != concat(#{term}, '-G')
+        /* 使用left和concat函数来少做一次like */
+    </select>
+    <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
+        select *
+        from post
+        where post_term = #{term}
+          and post_ccode = #{courseCode}
+          and post_hwup_or_hw_id = #{homeworkId}
+    </select>
+</mapper>

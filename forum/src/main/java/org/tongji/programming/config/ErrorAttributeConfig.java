@@ -20,7 +20,7 @@ public class ErrorAttributeConfig extends DefaultErrorAttributes {
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
-        log.info("后端出现异常，正在处理异常消息……");
+        log.debug("后端出现异常，正在处理异常消息……");
 
         Map<String, Object> attributes = super.getErrorAttributes(webRequest, options);
         var status = (Integer) attributes.get("status");
@@ -32,7 +32,7 @@ public class ErrorAttributeConfig extends DefaultErrorAttributes {
             attributes.put("msg", "拒绝访问");
         }
 
-        log.info("请看当前的异常消息：{}", attributes);
+        log.debug("请看当前的异常消息：{}", attributes);
         return attributes;
     }
 }

@@ -127,19 +127,12 @@ public class CourseServiceImpl implements CourseService {
         var response = new CourseTree();
         response.setCourses(
                 courseCodeMap.values().stream().filter(list -> !list.isEmpty()).map(list -> {
-                    var fatherCourse = CourseTree.Course.fromCourse(list.get(0));
-                    fatherCourse.setCourseSname(null);
-                    fatherCourse.setCourseNo(null);
+                    var course = CourseTree.Course.fromCourse(list.get(0));
+                    course.setCourseSname(null);
+                    course.setCourseNo(null);
+                    course.setWeeks(getWeeks(course.getCourseTerm(), course.getCourseCode()));
 
-                    var weeks = getWeeks(fatherCourse.getCourseTerm(), fatherCourse.getCourseCode());
-
-                    fatherCourse.setClasses(
-                            list.stream().map(CourseTree.Class::fromCourse)
-                                    .peek(c -> c.setWeeks(weeks))
-                                    .collect(Collectors.toList())
-                    );
-
-                    return fatherCourse;
+                    return course;
                 }).collect(Collectors.toList())
         );
 

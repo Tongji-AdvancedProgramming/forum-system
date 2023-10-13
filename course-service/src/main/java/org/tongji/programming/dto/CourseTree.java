@@ -23,7 +23,7 @@ public class CourseTree {
     @AllArgsConstructor
     @EqualsAndHashCode(callSuper = true)
     public static class Course extends org.tongji.programming.pojo.Course {
-        private List<Class> classes;
+        private List<Week> weeks;
 
         public static Course fromCourse(org.tongji.programming.pojo.Course course) {
             var newCourse = new Course();
@@ -34,26 +34,6 @@ public class CourseTree {
             newCourse.setCourseSname(course.getCourseSname());
             newCourse.setCourseType(course.getCourseType());
             return newCourse;
-        }
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class Class extends org.tongji.programming.pojo.Course {
-        private List<Week> weeks;
-
-        public static Class fromCourse(org.tongji.programming.pojo.Course course) {
-            var newClass = new Class();
-            newClass.setCourseTerm(course.getCourseTerm());
-            newClass.setCourseNo(course.getCourseNo());
-            newClass.setCourseCode(course.getCourseCode());
-            newClass.setCourseFname(course.getCourseFname());
-            newClass.setCourseSname(course.getCourseSname());
-            newClass.setCourseType(course.getCourseType());
-            newClass.setWeeks(new ArrayList<>(0));
-            return newClass;
         }
     }
 

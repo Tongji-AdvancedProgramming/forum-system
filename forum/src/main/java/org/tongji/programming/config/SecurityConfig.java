@@ -126,7 +126,7 @@ class forumAuthenticationSuccessHandler implements AuthenticationSuccessHandler 
 
         var ip = RequestInfoHelper.getClientIpAddr(request);
         var ua = RequestInfoHelper.getUserAgent(request);
-        logService.logLogin("", ip, ua, "登录成功");
+        logService.logLogin(authentication.getName(), ip, ua, "登录成功");
 
         var out = response.getOutputStream();
         out.write(new ObjectMapper().writeValueAsBytes(apiResponse));

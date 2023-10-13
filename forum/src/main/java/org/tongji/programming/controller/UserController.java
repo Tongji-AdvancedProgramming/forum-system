@@ -1,21 +1,21 @@
 package org.tongji.programming.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tongji.programming.dto.ApiDataResponse;
-import org.tongji.programming.dto.ApiResponse;
 import org.tongji.programming.pojo.Student;
-import org.tongji.programming.service.UserService;
+import org.tongji.programming.pojo.StudentInfo;
+import org.tongji.programming.service.StudentInfoService;
+import org.tongji.programming.service.StudentService;
 
 import java.security.Principal;
-import java.util.List;
 
 /**
  * 用户控制器类
@@ -30,13 +30,19 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    UserService userService;
+    StudentService studentService;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserService(StudentService studentService) {
+        this.studentService = studentService;
     }
 
+    StudentInfoService studentInfoService;
+
+    @Autowired
+    public void setStudentInfoService(StudentInfoService studentInfoService) {
+        this.studentInfoService = studentInfoService;
+    }
 
     @Secured("ROLE_USER")
     @Operation(
@@ -45,7 +51,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     protected ApiDataResponse<Student> getMe(Principal principal) {
         var id = principal.getName();
-        return ApiDataResponse.success(userService.getMe(id));
+        return ApiDataResponse.success(studentService.getMe(id));
     }
 
     @Secured("ROLE_USER")
@@ -56,7 +62,19 @@ public class UserController {
     @RequestMapping(value = "/info-completion-needed", method = RequestMethod.GET)
     protected ApiDataResponse<Boolean> informationCompletionNeeded(Principal principal) {
         var id = principal.getName();
-        return ApiDataResponse.success(userService.isInfoCompletionNeeded(id));
+        return ApiDataResponse.success(studentService.isInfoCompletionNeeded(id));
+    }
+
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "当前登录的用户论坛信息",
+            description = "返回的是一些帮助论坛更加友好运行的信息"
+    )
+    @GetMapping("/info")
+    protected ApiDataResponse<StudentInfo> getMyInfo(Principal principal) {
+        var id = principal.getName();
+        return ApiDataResponse.success(studentInfoService.getByStuNo(id));
     }
 
 }
