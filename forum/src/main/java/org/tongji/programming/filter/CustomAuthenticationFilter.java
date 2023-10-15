@@ -69,7 +69,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         var count = redisTemplate.opsForValue().increment(key, 1);
         if (count != null && (long) count > 10) {
             redisTemplate.expire(key, 60, TimeUnit.SECONDS);
-            response.setStatus(429);
+            response.setStatus(200);
             writeResponse(response, tooManyRequests());
             logService.logLogin("", ip, ua, "限流拒绝");
             return;

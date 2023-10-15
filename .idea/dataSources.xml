@@ -18,5 +18,15 @@
       <jdbc-url>jdbc:redis://10.80.42.189:6379/0</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="forum_dev@10.80.43.196" uuid="dc612d7d-d0dd-4d46-b0fe-94de6803fb71">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://10.80.43.196:3306/forum_dev</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="characterEncoding" value="gbk" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>

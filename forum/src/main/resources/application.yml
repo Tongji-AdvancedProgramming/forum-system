@@ -7,11 +7,15 @@ spring:
       password: rememberus
       database: 12
   datasource:
-    url: jdbc:mysql://10.80.42.189:3306/forum_dev
+    url: jdbc:mysql://10.80.43.196:3306/forum_dev
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: dev
-    password: rememberus1nthedayofend
+    username: forum
+    password: rememberus1nthed@yofend
 
 #logging:
 #  level:
 #    org.tongji.programming.mapper: debug
+
+forum:
+  user:
+    default-avatar: https://forum-1305284863.cos.ap-shanghai.myqcloud.com/user-default.png

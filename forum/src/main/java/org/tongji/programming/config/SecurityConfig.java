@@ -21,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
@@ -85,12 +86,24 @@ public class SecurityConfig {
                         .successHandler(authenticationSuccessHandler)  // 自定义成功处理器
                         .failureHandler(authenticationFailureHandler)  // 自定义失败处理器
                         .permitAll())
+                .logout(config -> config.logoutUrl("/logout").logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        response.setStatus(200);
+                        response.setContentType("application/json; charset=utf-8");
+
+                        var out = response.getOutputStream();
+                        var resp = ApiResponse.success("登出成功");
+                        new ObjectMapper().writeValue(out,resp);
+                        out.close();
+                    }
+                }))
                 .exceptionHandling(config -> config.authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
                         var resp = new ApiDataResponse<String>(
                                 "你看到了这条消息，说明你正在使用浏览器、API测试工具、curl等工具来手动访问我们的接口。很显然，你正在访问一个受限的接口，而接口拒绝了你，因为你没有登录。出于个人的、学习的、非侵入的目的，使用我们系统的接口，我作为一个曾经的极客，原则上是不反对的。但是希望你谨慎调用，切勿滥用，否则可能会被封禁账号、上报教师，滥用接口对系统造成严重破坏的，教师可能会上报学院/学校。请君自重。供开发者使用的login页面位于后端的/login.html端点，生产版本中可能需要加上/api前缀，请你自己探究。" +
-                                "用于调试的信息：" + request.getRequestURI()
+                                        "用于调试的信息：" + request.getRequestURI()
                         );
                         resp.setCode(4001);
                         resp.setMsg("未登录/登录过期");

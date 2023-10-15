@@ -49,8 +49,8 @@ public class UserCourseServiceImpl implements UserCourseService {
             return new LinkedList<>();
         }
 
-        if (Integer.parseInt(stu.getStuUserlevel()) >= 2) {
-            // 用户是助教或更高，可以访问所有课程。
+        if (Integer.parseInt(stu.getStuUserlevel()) >= 5) {
+            // 用户是管理员或更高，可以访问所有课程。
             var wrapper = new QueryWrapper<Course>()
                     .groupBy("course_code")
                     .select("course_term", "course_code");
@@ -93,8 +93,8 @@ public class UserCourseServiceImpl implements UserCourseService {
             return new LinkedList<>();
         }
 
-        if (Integer.parseInt(stu.getStuUserlevel()) >= 2) {
-            // 用户是助教或更高，可以访问所有课程。
+        if (Integer.parseInt(stu.getStuUserlevel()) >= 5) {
+            // 用户是管理员或更高，可以访问所有课程。
             var wrapper = new QueryWrapper<Course>()
                     .select("course_term", "course_no");
             var courses = courseMapper.selectList(wrapper);
