@@ -16,125 +16,139 @@ import lombok.Data;
 @Data
 public class Post implements Serializable {
     /**
-     * 
+     * ID(主键,自动增长)
      */
     @TableId(type = IdType.AUTO)
-    private Integer postId;
+    private Integer post_id;
 
     /**
-     * 
+     * 学期(外键)
      */
-    private String postTerm;
+    private String post_term;
 
     /**
-     * 
+     * 课程序号(对应course中的course_code 注意:不是外键关系,但要检查是否存在)
      */
-    private String postCcode;
+    private String post_ccode;
 
     /**
-     * 
+     * 对应的上传文件/具体作业的序号
+
+                            如果是在第x周的整体问题处发帖,则本字段值为上传文件序号('22232-000001-W0101' - 必须在homework_uploaded中存在)
+
+                            如果是在第x周的某具体作业处发帖,则本字段值为具体作业序号('0401' - 必须在homework中存在)
+
+                            如果是在课程的整体问题处发帖(仅管理员及超级用户允许),则本字段值为"学期-G5位序号-W4位周次"('22232-G00001-W0101')
      */
-    private String postHwupOrHwId;
+    private String post_hwup_or_hw_id;
 
     /**
-     * 
+     * 布置周(课程的整体问题则周次为-1)
      */
-    private Integer postWeek;
+    private Integer post_week;
 
     /**
-     * 
+     * 章节(课程的整体问题则章节为-1)
      */
-    private Integer postChapter;
+    private Integer post_chapter;
 
     /**
-     * 
+     * 对应帖子的id(与post_id是外键关系)
+
+                            如果是发帖,则为NULL
+
+                            如果是回帖,则为对应帖子的post_id(以此为依据构建发帖回帖的树形结构)
      */
-    private Integer postAnswerId;
+    private Integer post_answer_id;
 
     /**
-     * 
+     * 帖子类型('Question':首发问题 'QuestionsAdditional':追问 'Answer':回帖 'Other':其它 '/':预留)
+
+                            以 post_term + post_ccode + post_hwup_or_hw_id 为基准汇聚,具体排序规则?
+
+                            本字段是否多余?
      */
-    private Object postType;
+    private Object post_type;
 
     /**
-     * 
+     * 发帖人学号
      */
-    private String postSno;
+    private String post_sno;
 
     /**
-     * 
+     * 优先级(从'0'~'9' 依次递增,帖子显示是按优先级顺序,相同优先级按发帖时间,可由管理员手工置位进行调整)
      */
-    private String postPriority;
+    private String post_priority;
 
     /**
-     * 
+     * 约定的tag 1标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag01;
+    private Object post_tag_01;
 
     /**
-     * 
+     * 约定的tag 2标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag02;
+    private Object post_tag_02;
 
     /**
-     * 
+     * 约定的tag 3标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag03;
+    private Object post_tag_03;
 
     /**
-     * 
+     * 约定的tag 4标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag04;
+    private Object post_tag_04;
 
     /**
-     * 
+     * 约定的tag 5标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag05;
+    private Object post_tag_05;
 
     /**
-     * 
+     * 约定的tag 6标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag06;
+    private Object post_tag_06;
 
     /**
-     * 
+     * 约定的tag 7标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag07;
+    private Object post_tag_07;
 
     /**
-     * 
+     * 约定的tag 8标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag08;
+    private Object post_tag_08;
 
     /**
-     * 
+     * 约定的tag 9标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag09;
+    private Object post_tag_09;
 
     /**
-     * 
+     * 约定的tag 10标记(0:此标记未置位 1:此标记已置位)
      */
-    private Object postTag10;
+    private Object post_tag_10;
 
     /**
-     * 
+     * 发帖具体内容(允许贴图,Richtext?)
      */
-    private String postContent;
+    private String post_content;
 
     /**
-     * 
+     * 发帖时间
      */
-    private Date postDate;
+    private Date post_date;
 
     /**
-     * 
+     * 帖子是否已删除('0':正常显示 '1':不显示,包括所有的回帖 注意:enum不要当int处理)
      */
-    private Object postIsDel;
+    private Object post_is_del;
 
     /**
-     * 
+     * 备注(预留)
      */
-    private String postComment;
+    private String post_comment;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -151,60 +165,60 @@ public class Post implements Serializable {
             return false;
         }
         Post other = (Post) that;
-        return (this.getPostId() == null ? other.getPostId() == null : this.getPostId().equals(other.getPostId()))
-            && (this.getPostTerm() == null ? other.getPostTerm() == null : this.getPostTerm().equals(other.getPostTerm()))
-            && (this.getPostCcode() == null ? other.getPostCcode() == null : this.getPostCcode().equals(other.getPostCcode()))
-            && (this.getPostHwupOrHwId() == null ? other.getPostHwupOrHwId() == null : this.getPostHwupOrHwId().equals(other.getPostHwupOrHwId()))
-            && (this.getPostWeek() == null ? other.getPostWeek() == null : this.getPostWeek().equals(other.getPostWeek()))
-            && (this.getPostChapter() == null ? other.getPostChapter() == null : this.getPostChapter().equals(other.getPostChapter()))
-            && (this.getPostAnswerId() == null ? other.getPostAnswerId() == null : this.getPostAnswerId().equals(other.getPostAnswerId()))
-            && (this.getPostType() == null ? other.getPostType() == null : this.getPostType().equals(other.getPostType()))
-            && (this.getPostSno() == null ? other.getPostSno() == null : this.getPostSno().equals(other.getPostSno()))
-            && (this.getPostPriority() == null ? other.getPostPriority() == null : this.getPostPriority().equals(other.getPostPriority()))
-            && (this.getPostTag01() == null ? other.getPostTag01() == null : this.getPostTag01().equals(other.getPostTag01()))
-            && (this.getPostTag02() == null ? other.getPostTag02() == null : this.getPostTag02().equals(other.getPostTag02()))
-            && (this.getPostTag03() == null ? other.getPostTag03() == null : this.getPostTag03().equals(other.getPostTag03()))
-            && (this.getPostTag04() == null ? other.getPostTag04() == null : this.getPostTag04().equals(other.getPostTag04()))
-            && (this.getPostTag05() == null ? other.getPostTag05() == null : this.getPostTag05().equals(other.getPostTag05()))
-            && (this.getPostTag06() == null ? other.getPostTag06() == null : this.getPostTag06().equals(other.getPostTag06()))
-            && (this.getPostTag07() == null ? other.getPostTag07() == null : this.getPostTag07().equals(other.getPostTag07()))
-            && (this.getPostTag08() == null ? other.getPostTag08() == null : this.getPostTag08().equals(other.getPostTag08()))
-            && (this.getPostTag09() == null ? other.getPostTag09() == null : this.getPostTag09().equals(other.getPostTag09()))
-            && (this.getPostTag10() == null ? other.getPostTag10() == null : this.getPostTag10().equals(other.getPostTag10()))
-            && (this.getPostContent() == null ? other.getPostContent() == null : this.getPostContent().equals(other.getPostContent()))
-            && (this.getPostDate() == null ? other.getPostDate() == null : this.getPostDate().equals(other.getPostDate()))
-            && (this.getPostIsDel() == null ? other.getPostIsDel() == null : this.getPostIsDel().equals(other.getPostIsDel()))
-            && (this.getPostComment() == null ? other.getPostComment() == null : this.getPostComment().equals(other.getPostComment()));
+        return (this.getPost_id() == null ? other.getPost_id() == null : this.getPost_id().equals(other.getPost_id()))
+            && (this.getPost_term() == null ? other.getPost_term() == null : this.getPost_term().equals(other.getPost_term()))
+            && (this.getPost_ccode() == null ? other.getPost_ccode() == null : this.getPost_ccode().equals(other.getPost_ccode()))
+            && (this.getPost_hwup_or_hw_id() == null ? other.getPost_hwup_or_hw_id() == null : this.getPost_hwup_or_hw_id().equals(other.getPost_hwup_or_hw_id()))
+            && (this.getPost_week() == null ? other.getPost_week() == null : this.getPost_week().equals(other.getPost_week()))
+            && (this.getPost_chapter() == null ? other.getPost_chapter() == null : this.getPost_chapter().equals(other.getPost_chapter()))
+            && (this.getPost_answer_id() == null ? other.getPost_answer_id() == null : this.getPost_answer_id().equals(other.getPost_answer_id()))
+            && (this.getPost_type() == null ? other.getPost_type() == null : this.getPost_type().equals(other.getPost_type()))
+            && (this.getPost_sno() == null ? other.getPost_sno() == null : this.getPost_sno().equals(other.getPost_sno()))
+            && (this.getPost_priority() == null ? other.getPost_priority() == null : this.getPost_priority().equals(other.getPost_priority()))
+            && (this.getPost_tag_01() == null ? other.getPost_tag_01() == null : this.getPost_tag_01().equals(other.getPost_tag_01()))
+            && (this.getPost_tag_02() == null ? other.getPost_tag_02() == null : this.getPost_tag_02().equals(other.getPost_tag_02()))
+            && (this.getPost_tag_03() == null ? other.getPost_tag_03() == null : this.getPost_tag_03().equals(other.getPost_tag_03()))
+            && (this.getPost_tag_04() == null ? other.getPost_tag_04() == null : this.getPost_tag_04().equals(other.getPost_tag_04()))
+            && (this.getPost_tag_05() == null ? other.getPost_tag_05() == null : this.getPost_tag_05().equals(other.getPost_tag_05()))
+            && (this.getPost_tag_06() == null ? other.getPost_tag_06() == null : this.getPost_tag_06().equals(other.getPost_tag_06()))
+            && (this.getPost_tag_07() == null ? other.getPost_tag_07() == null : this.getPost_tag_07().equals(other.getPost_tag_07()))
+            && (this.getPost_tag_08() == null ? other.getPost_tag_08() == null : this.getPost_tag_08().equals(other.getPost_tag_08()))
+            && (this.getPost_tag_09() == null ? other.getPost_tag_09() == null : this.getPost_tag_09().equals(other.getPost_tag_09()))
+            && (this.getPost_tag_10() == null ? other.getPost_tag_10() == null : this.getPost_tag_10().equals(other.getPost_tag_10()))
+            && (this.getPost_content() == null ? other.getPost_content() == null : this.getPost_content().equals(other.getPost_content()))
+            && (this.getPost_date() == null ? other.getPost_date() == null : this.getPost_date().equals(other.getPost_date()))
+            && (this.getPost_is_del() == null ? other.getPost_is_del() == null : this.getPost_is_del().equals(other.getPost_is_del()))
+            && (this.getPost_comment() == null ? other.getPost_comment() == null : this.getPost_comment().equals(other.getPost_comment()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getPostId() == null) ? 0 : getPostId().hashCode());
-        result = prime * result + ((getPostTerm() == null) ? 0 : getPostTerm().hashCode());
-        result = prime * result + ((getPostCcode() == null) ? 0 : getPostCcode().hashCode());
-        result = prime * result + ((getPostHwupOrHwId() == null) ? 0 : getPostHwupOrHwId().hashCode());
-        result = prime * result + ((getPostWeek() == null) ? 0 : getPostWeek().hashCode());
-        result = prime * result + ((getPostChapter() == null) ? 0 : getPostChapter().hashCode());
-        result = prime * result + ((getPostAnswerId() == null) ? 0 : getPostAnswerId().hashCode());
-        result = prime * result + ((getPostType() == null) ? 0 : getPostType().hashCode());
-        result = prime * result + ((getPostSno() == null) ? 0 : getPostSno().hashCode());
-        result = prime * result + ((getPostPriority() == null) ? 0 : getPostPriority().hashCode());
-        result = prime * result + ((getPostTag01() == null) ? 0 : getPostTag01().hashCode());
-        result = prime * result + ((getPostTag02() == null) ? 0 : getPostTag02().hashCode());
-        result = prime * result + ((getPostTag03() == null) ? 0 : getPostTag03().hashCode());
-        result = prime * result + ((getPostTag04() == null) ? 0 : getPostTag04().hashCode());
-        result = prime * result + ((getPostTag05() == null) ? 0 : getPostTag05().hashCode());
-        result = prime * result + ((getPostTag06() == null) ? 0 : getPostTag06().hashCode());
-        result = prime * result + ((getPostTag07() == null) ? 0 : getPostTag07().hashCode());
-        result = prime * result + ((getPostTag08() == null) ? 0 : getPostTag08().hashCode());
-        result = prime * result + ((getPostTag09() == null) ? 0 : getPostTag09().hashCode());
-        result = prime * result + ((getPostTag10() == null) ? 0 : getPostTag10().hashCode());
-        result = prime * result + ((getPostContent() == null) ? 0 : getPostContent().hashCode());
-        result = prime * result + ((getPostDate() == null) ? 0 : getPostDate().hashCode());
-        result = prime * result + ((getPostIsDel() == null) ? 0 : getPostIsDel().hashCode());
-        result = prime * result + ((getPostComment() == null) ? 0 : getPostComment().hashCode());
+        result = prime * result + ((getPost_id() == null) ? 0 : getPost_id().hashCode());
+        result = prime * result + ((getPost_term() == null) ? 0 : getPost_term().hashCode());
+        result = prime * result + ((getPost_ccode() == null) ? 0 : getPost_ccode().hashCode());
+        result = prime * result + ((getPost_hwup_or_hw_id() == null) ? 0 : getPost_hwup_or_hw_id().hashCode());
+        result = prime * result + ((getPost_week() == null) ? 0 : getPost_week().hashCode());
+        result = prime * result + ((getPost_chapter() == null) ? 0 : getPost_chapter().hashCode());
+        result = prime * result + ((getPost_answer_id() == null) ? 0 : getPost_answer_id().hashCode());
+        result = prime * result + ((getPost_type() == null) ? 0 : getPost_type().hashCode());
+        result = prime * result + ((getPost_sno() == null) ? 0 : getPost_sno().hashCode());
+        result = prime * result + ((getPost_priority() == null) ? 0 : getPost_priority().hashCode());
+        result = prime * result + ((getPost_tag_01() == null) ? 0 : getPost_tag_01().hashCode());
+        result = prime * result + ((getPost_tag_02() == null) ? 0 : getPost_tag_02().hashCode());
+        result = prime * result + ((getPost_tag_03() == null) ? 0 : getPost_tag_03().hashCode());
+        result = prime * result + ((getPost_tag_04() == null) ? 0 : getPost_tag_04().hashCode());
+        result = prime * result + ((getPost_tag_05() == null) ? 0 : getPost_tag_05().hashCode());
+        result = prime * result + ((getPost_tag_06() == null) ? 0 : getPost_tag_06().hashCode());
+        result = prime * result + ((getPost_tag_07() == null) ? 0 : getPost_tag_07().hashCode());
+        result = prime * result + ((getPost_tag_08() == null) ? 0 : getPost_tag_08().hashCode());
+        result = prime * result + ((getPost_tag_09() == null) ? 0 : getPost_tag_09().hashCode());
+        result = prime * result + ((getPost_tag_10() == null) ? 0 : getPost_tag_10().hashCode());
+        result = prime * result + ((getPost_content() == null) ? 0 : getPost_content().hashCode());
+        result = prime * result + ((getPost_date() == null) ? 0 : getPost_date().hashCode());
+        result = prime * result + ((getPost_is_del() == null) ? 0 : getPost_is_del().hashCode());
+        result = prime * result + ((getPost_comment() == null) ? 0 : getPost_comment().hashCode());
         return result;
     }
 
@@ -214,30 +228,30 @@ public class Post implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", postId=").append(postId);
-        sb.append(", postTerm=").append(postTerm);
-        sb.append(", postCcode=").append(postCcode);
-        sb.append(", postHwupOrHwId=").append(postHwupOrHwId);
-        sb.append(", postWeek=").append(postWeek);
-        sb.append(", postChapter=").append(postChapter);
-        sb.append(", postAnswerId=").append(postAnswerId);
-        sb.append(", postType=").append(postType);
-        sb.append(", postSno=").append(postSno);
-        sb.append(", postPriority=").append(postPriority);
-        sb.append(", postTag01=").append(postTag01);
-        sb.append(", postTag02=").append(postTag02);
-        sb.append(", postTag03=").append(postTag03);
-        sb.append(", postTag04=").append(postTag04);
-        sb.append(", postTag05=").append(postTag05);
-        sb.append(", postTag06=").append(postTag06);
-        sb.append(", postTag07=").append(postTag07);
-        sb.append(", postTag08=").append(postTag08);
-        sb.append(", postTag09=").append(postTag09);
-        sb.append(", postTag10=").append(postTag10);
-        sb.append(", postContent=").append(postContent);
-        sb.append(", postDate=").append(postDate);
-        sb.append(", postIsDel=").append(postIsDel);
-        sb.append(", postComment=").append(postComment);
+        sb.append(", post_id=").append(post_id);
+        sb.append(", post_term=").append(post_term);
+        sb.append(", post_ccode=").append(post_ccode);
+        sb.append(", post_hwup_or_hw_id=").append(post_hwup_or_hw_id);
+        sb.append(", post_week=").append(post_week);
+        sb.append(", post_chapter=").append(post_chapter);
+        sb.append(", post_answer_id=").append(post_answer_id);
+        sb.append(", post_type=").append(post_type);
+        sb.append(", post_sno=").append(post_sno);
+        sb.append(", post_priority=").append(post_priority);
+        sb.append(", post_tag_01=").append(post_tag_01);
+        sb.append(", post_tag_02=").append(post_tag_02);
+        sb.append(", post_tag_03=").append(post_tag_03);
+        sb.append(", post_tag_04=").append(post_tag_04);
+        sb.append(", post_tag_05=").append(post_tag_05);
+        sb.append(", post_tag_06=").append(post_tag_06);
+        sb.append(", post_tag_07=").append(post_tag_07);
+        sb.append(", post_tag_08=").append(post_tag_08);
+        sb.append(", post_tag_09=").append(post_tag_09);
+        sb.append(", post_tag_10=").append(post_tag_10);
+        sb.append(", post_content=").append(post_content);
+        sb.append(", post_date=").append(post_date);
+        sb.append(", post_is_del=").append(post_is_del);
+        sb.append(", post_comment=").append(post_comment);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

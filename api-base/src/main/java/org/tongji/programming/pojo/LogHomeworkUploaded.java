@@ -16,30 +16,30 @@ import lombok.Data;
 @Data
 public class LogHomeworkUploaded implements Serializable {
     /**
-     * 
+     * 序号(主键,自动增长)
      */
     @TableId(type = IdType.AUTO)
-    private Integer logHwupId;
+    private Integer log_hwup_id;
 
     /**
-     * 
+     * 操作人学号
      */
-    private String logHwupOpno;
+    private String log_hwup_opno;
 
     /**
-     * 
+     * 登录IP
      */
-    private String logHwupIpaddr;
+    private String log_hwup_ipaddr;
 
     /**
-     * 
+     * 登录时间
      */
-    private Date logHwupDate;
+    private Date log_hwup_date;
 
     /**
-     * 
+     * 备注
      */
-    private String logHwupComment;
+    private String log_hwup_comment;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -56,22 +56,22 @@ public class LogHomeworkUploaded implements Serializable {
             return false;
         }
         LogHomeworkUploaded other = (LogHomeworkUploaded) that;
-        return (this.getLogHwupId() == null ? other.getLogHwupId() == null : this.getLogHwupId().equals(other.getLogHwupId()))
-            && (this.getLogHwupOpno() == null ? other.getLogHwupOpno() == null : this.getLogHwupOpno().equals(other.getLogHwupOpno()))
-            && (this.getLogHwupIpaddr() == null ? other.getLogHwupIpaddr() == null : this.getLogHwupIpaddr().equals(other.getLogHwupIpaddr()))
-            && (this.getLogHwupDate() == null ? other.getLogHwupDate() == null : this.getLogHwupDate().equals(other.getLogHwupDate()))
-            && (this.getLogHwupComment() == null ? other.getLogHwupComment() == null : this.getLogHwupComment().equals(other.getLogHwupComment()));
+        return (this.getLog_hwup_id() == null ? other.getLog_hwup_id() == null : this.getLog_hwup_id().equals(other.getLog_hwup_id()))
+            && (this.getLog_hwup_opno() == null ? other.getLog_hwup_opno() == null : this.getLog_hwup_opno().equals(other.getLog_hwup_opno()))
+            && (this.getLog_hwup_ipaddr() == null ? other.getLog_hwup_ipaddr() == null : this.getLog_hwup_ipaddr().equals(other.getLog_hwup_ipaddr()))
+            && (this.getLog_hwup_date() == null ? other.getLog_hwup_date() == null : this.getLog_hwup_date().equals(other.getLog_hwup_date()))
+            && (this.getLog_hwup_comment() == null ? other.getLog_hwup_comment() == null : this.getLog_hwup_comment().equals(other.getLog_hwup_comment()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getLogHwupId() == null) ? 0 : getLogHwupId().hashCode());
-        result = prime * result + ((getLogHwupOpno() == null) ? 0 : getLogHwupOpno().hashCode());
-        result = prime * result + ((getLogHwupIpaddr() == null) ? 0 : getLogHwupIpaddr().hashCode());
-        result = prime * result + ((getLogHwupDate() == null) ? 0 : getLogHwupDate().hashCode());
-        result = prime * result + ((getLogHwupComment() == null) ? 0 : getLogHwupComment().hashCode());
+        result = prime * result + ((getLog_hwup_id() == null) ? 0 : getLog_hwup_id().hashCode());
+        result = prime * result + ((getLog_hwup_opno() == null) ? 0 : getLog_hwup_opno().hashCode());
+        result = prime * result + ((getLog_hwup_ipaddr() == null) ? 0 : getLog_hwup_ipaddr().hashCode());
+        result = prime * result + ((getLog_hwup_date() == null) ? 0 : getLog_hwup_date().hashCode());
+        result = prime * result + ((getLog_hwup_comment() == null) ? 0 : getLog_hwup_comment().hashCode());
         return result;
     }
 
@@ -81,11 +81,11 @@ public class LogHomeworkUploaded implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", logHwupId=").append(logHwupId);
-        sb.append(", logHwupOpno=").append(logHwupOpno);
-        sb.append(", logHwupIpaddr=").append(logHwupIpaddr);
-        sb.append(", logHwupDate=").append(logHwupDate);
-        sb.append(", logHwupComment=").append(logHwupComment);
+        sb.append(", log_hwup_id=").append(log_hwup_id);
+        sb.append(", log_hwup_opno=").append(log_hwup_opno);
+        sb.append(", log_hwup_ipaddr=").append(log_hwup_ipaddr);
+        sb.append(", log_hwup_date=").append(log_hwup_date);
+        sb.append(", log_hwup_comment=").append(log_hwup_comment);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

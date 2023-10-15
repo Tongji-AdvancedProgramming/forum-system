@@ -16,35 +16,35 @@ import lombok.Data;
 @Data
 public class LogLogin implements Serializable {
     /**
-     * 
+     * 序号(主键,自动增长)
      */
     @TableId(type = IdType.AUTO)
-    private Integer logLoginId;
+    private Integer log_login_id;
 
     /**
-     * 
+     * 学号
      */
-    private String logLoginNo;
+    private String log_login_no;
 
     /**
-     * 
+     * 登录IP
      */
-    private String logLoginIpaddr;
+    private String log_login_ipaddr;
 
     /**
-     * 
+     * 登录时间
      */
-    private Date logLoginDate;
+    private Date log_login_date;
 
     /**
-     * 
+     * 登录环境(浏览器的agent)
      */
-    private String logLoginUseragent;
+    private String log_login_useragent;
 
     /**
-     * 
+     * 备注
      */
-    private String logLoginComment;
+    private String log_login_comment;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -61,24 +61,24 @@ public class LogLogin implements Serializable {
             return false;
         }
         LogLogin other = (LogLogin) that;
-        return (this.getLogLoginId() == null ? other.getLogLoginId() == null : this.getLogLoginId().equals(other.getLogLoginId()))
-            && (this.getLogLoginNo() == null ? other.getLogLoginNo() == null : this.getLogLoginNo().equals(other.getLogLoginNo()))
-            && (this.getLogLoginIpaddr() == null ? other.getLogLoginIpaddr() == null : this.getLogLoginIpaddr().equals(other.getLogLoginIpaddr()))
-            && (this.getLogLoginDate() == null ? other.getLogLoginDate() == null : this.getLogLoginDate().equals(other.getLogLoginDate()))
-            && (this.getLogLoginUseragent() == null ? other.getLogLoginUseragent() == null : this.getLogLoginUseragent().equals(other.getLogLoginUseragent()))
-            && (this.getLogLoginComment() == null ? other.getLogLoginComment() == null : this.getLogLoginComment().equals(other.getLogLoginComment()));
+        return (this.getLog_login_id() == null ? other.getLog_login_id() == null : this.getLog_login_id().equals(other.getLog_login_id()))
+            && (this.getLog_login_no() == null ? other.getLog_login_no() == null : this.getLog_login_no().equals(other.getLog_login_no()))
+            && (this.getLog_login_ipaddr() == null ? other.getLog_login_ipaddr() == null : this.getLog_login_ipaddr().equals(other.getLog_login_ipaddr()))
+            && (this.getLog_login_date() == null ? other.getLog_login_date() == null : this.getLog_login_date().equals(other.getLog_login_date()))
+            && (this.getLog_login_useragent() == null ? other.getLog_login_useragent() == null : this.getLog_login_useragent().equals(other.getLog_login_useragent()))
+            && (this.getLog_login_comment() == null ? other.getLog_login_comment() == null : this.getLog_login_comment().equals(other.getLog_login_comment()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getLogLoginId() == null) ? 0 : getLogLoginId().hashCode());
-        result = prime * result + ((getLogLoginNo() == null) ? 0 : getLogLoginNo().hashCode());
-        result = prime * result + ((getLogLoginIpaddr() == null) ? 0 : getLogLoginIpaddr().hashCode());
-        result = prime * result + ((getLogLoginDate() == null) ? 0 : getLogLoginDate().hashCode());
-        result = prime * result + ((getLogLoginUseragent() == null) ? 0 : getLogLoginUseragent().hashCode());
-        result = prime * result + ((getLogLoginComment() == null) ? 0 : getLogLoginComment().hashCode());
+        result = prime * result + ((getLog_login_id() == null) ? 0 : getLog_login_id().hashCode());
+        result = prime * result + ((getLog_login_no() == null) ? 0 : getLog_login_no().hashCode());
+        result = prime * result + ((getLog_login_ipaddr() == null) ? 0 : getLog_login_ipaddr().hashCode());
+        result = prime * result + ((getLog_login_date() == null) ? 0 : getLog_login_date().hashCode());
+        result = prime * result + ((getLog_login_useragent() == null) ? 0 : getLog_login_useragent().hashCode());
+        result = prime * result + ((getLog_login_comment() == null) ? 0 : getLog_login_comment().hashCode());
         return result;
     }
 
@@ -88,12 +88,12 @@ public class LogLogin implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", logLoginId=").append(logLoginId);
-        sb.append(", logLoginNo=").append(logLoginNo);
-        sb.append(", logLoginIpaddr=").append(logLoginIpaddr);
-        sb.append(", logLoginDate=").append(logLoginDate);
-        sb.append(", logLoginUseragent=").append(logLoginUseragent);
-        sb.append(", logLoginComment=").append(logLoginComment);
+        sb.append(", log_login_id=").append(log_login_id);
+        sb.append(", log_login_no=").append(log_login_no);
+        sb.append(", log_login_ipaddr=").append(log_login_ipaddr);
+        sb.append(", log_login_date=").append(log_login_date);
+        sb.append(", log_login_useragent=").append(log_login_useragent);
+        sb.append(", log_login_comment=").append(log_login_comment);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

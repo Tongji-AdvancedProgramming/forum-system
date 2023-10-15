@@ -16,35 +16,35 @@ import lombok.Data;
 @Data
 public class LogPost implements Serializable {
     /**
-     * 
+     * 序号(主键,自动增长)
      */
     @TableId(type = IdType.AUTO)
-    private Integer logPostId;
+    private Integer log_post_id;
 
     /**
-     * 
+     * 帖子id
      */
-    private Integer logPostPostid;
+    private Integer log_post_postid;
 
     /**
-     * 
+     * 操作人学号
      */
-    private String logPostOpno;
+    private String log_post_opno;
 
     /**
-     * 
+     * 登录IP
      */
-    private String logPostIpaddr;
+    private String log_post_ipaddr;
 
     /**
-     * 
+     * 登录时间
      */
-    private Date logPostDate;
+    private Date log_post_date;
 
     /**
-     * 
+     * 备注（没考虑好怎么更合理）
      */
-    private String logPostComment;
+    private String log_post_comment;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -61,24 +61,24 @@ public class LogPost implements Serializable {
             return false;
         }
         LogPost other = (LogPost) that;
-        return (this.getLogPostId() == null ? other.getLogPostId() == null : this.getLogPostId().equals(other.getLogPostId()))
-            && (this.getLogPostPostid() == null ? other.getLogPostPostid() == null : this.getLogPostPostid().equals(other.getLogPostPostid()))
-            && (this.getLogPostOpno() == null ? other.getLogPostOpno() == null : this.getLogPostOpno().equals(other.getLogPostOpno()))
-            && (this.getLogPostIpaddr() == null ? other.getLogPostIpaddr() == null : this.getLogPostIpaddr().equals(other.getLogPostIpaddr()))
-            && (this.getLogPostDate() == null ? other.getLogPostDate() == null : this.getLogPostDate().equals(other.getLogPostDate()))
-            && (this.getLogPostComment() == null ? other.getLogPostComment() == null : this.getLogPostComment().equals(other.getLogPostComment()));
+        return (this.getLog_post_id() == null ? other.getLog_post_id() == null : this.getLog_post_id().equals(other.getLog_post_id()))
+            && (this.getLog_post_postid() == null ? other.getLog_post_postid() == null : this.getLog_post_postid().equals(other.getLog_post_postid()))
+            && (this.getLog_post_opno() == null ? other.getLog_post_opno() == null : this.getLog_post_opno().equals(other.getLog_post_opno()))
+            && (this.getLog_post_ipaddr() == null ? other.getLog_post_ipaddr() == null : this.getLog_post_ipaddr().equals(other.getLog_post_ipaddr()))
+            && (this.getLog_post_date() == null ? other.getLog_post_date() == null : this.getLog_post_date().equals(other.getLog_post_date()))
+            && (this.getLog_post_comment() == null ? other.getLog_post_comment() == null : this.getLog_post_comment().equals(other.getLog_post_comment()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getLogPostId() == null) ? 0 : getLogPostId().hashCode());
-        result = prime * result + ((getLogPostPostid() == null) ? 0 : getLogPostPostid().hashCode());
-        result = prime * result + ((getLogPostOpno() == null) ? 0 : getLogPostOpno().hashCode());
-        result = prime * result + ((getLogPostIpaddr() == null) ? 0 : getLogPostIpaddr().hashCode());
-        result = prime * result + ((getLogPostDate() == null) ? 0 : getLogPostDate().hashCode());
-        result = prime * result + ((getLogPostComment() == null) ? 0 : getLogPostComment().hashCode());
+        result = prime * result + ((getLog_post_id() == null) ? 0 : getLog_post_id().hashCode());
+        result = prime * result + ((getLog_post_postid() == null) ? 0 : getLog_post_postid().hashCode());
+        result = prime * result + ((getLog_post_opno() == null) ? 0 : getLog_post_opno().hashCode());
+        result = prime * result + ((getLog_post_ipaddr() == null) ? 0 : getLog_post_ipaddr().hashCode());
+        result = prime * result + ((getLog_post_date() == null) ? 0 : getLog_post_date().hashCode());
+        result = prime * result + ((getLog_post_comment() == null) ? 0 : getLog_post_comment().hashCode());
         return result;
     }
 
@@ -88,12 +88,12 @@ public class LogPost implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", logPostId=").append(logPostId);
-        sb.append(", logPostPostid=").append(logPostPostid);
-        sb.append(", logPostOpno=").append(logPostOpno);
-        sb.append(", logPostIpaddr=").append(logPostIpaddr);
-        sb.append(", logPostDate=").append(logPostDate);
-        sb.append(", logPostComment=").append(logPostComment);
+        sb.append(", log_post_id=").append(log_post_id);
+        sb.append(", log_post_postid=").append(log_post_postid);
+        sb.append(", log_post_opno=").append(log_post_opno);
+        sb.append(", log_post_ipaddr=").append(log_post_ipaddr);
+        sb.append(", log_post_date=").append(log_post_date);
+        sb.append(", log_post_comment=").append(log_post_comment);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
