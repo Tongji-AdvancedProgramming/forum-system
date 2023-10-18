@@ -1,15 +1,16 @@
 package org.tongji.programming.service;
 
 import org.tongji.programming.dto.Board;
+import org.tongji.programming.pojo.Post;
+
+import java.util.List;
 
 /**
- * 系统使用一个Board ID来标识板块并筛选展示的帖子。
- * <p>
- * 这个服务用来解析这些板块的信息
+ * 板块相关服务
  *
  * @author cineazhan
  */
-public interface BoardIdService {
+public interface BoardService {
     /**
      * 解析Board Id（但不获取数据）
      */
@@ -24,4 +25,9 @@ public interface BoardIdService {
      * 由数据库中的hwId生成所属的板块Id
      */
     String generateIdFromHwId(String hwId, String term, String courseCode);
+
+    /**
+     * 获取板块内的帖子
+     */
+    List<Post> getPosts(String id);
 }

@@ -13,15 +13,15 @@ public interface PostMapper extends BaseMapper<Post> {
     /**
      * 获取课程整体的帖子
      */
-    List<Post> getCoursePosts(@Param("term") String term, @Param("courseCode") String courseCode);
+    List<Post> getCoursePosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("showHidden") boolean showHidden);
 
     /**
      * 获取某周的整体帖子
      */
-    List<Post> getWeekPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("week") int week);
+    List<Post> getWeekPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("week") int week, @Param("showHidden") boolean showHidden);
 
     /**
      * 获取某次作业的帖子
      */
-    List<Post> getHomeworkPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("homeworkId") String homeworkId);
+    List<Post> getHomeworkPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("homeworkId") int homeworkId, @Param("showHidden") boolean showHidden);
 }

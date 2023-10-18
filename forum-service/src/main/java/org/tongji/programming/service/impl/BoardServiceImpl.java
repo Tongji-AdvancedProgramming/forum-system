@@ -1,6 +1,7 @@
 package org.tongji.programming.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,18 @@ import org.tongji.programming.mapper.CourseMapper;
 import org.tongji.programming.mapper.HomeworkMapper;
 import org.tongji.programming.pojo.Course;
 import org.tongji.programming.pojo.Homework;
-import org.tongji.programming.service.BoardIdService;
+import org.tongji.programming.pojo.Post;
+import org.tongji.programming.service.BoardService;
+import org.tongji.programming.service.PostService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author cinea
  */
 @Service
-public class BoardIdServiceImpl implements BoardIdService {
+public class BoardServiceImpl implements BoardService {
     CourseMapper courseMapper;
 
     @Autowired
@@ -29,6 +35,13 @@ public class BoardIdServiceImpl implements BoardIdService {
     @Autowired
     public void setHomeworkMapper(HomeworkMapper homeworkMapper) {
         this.homeworkMapper = homeworkMapper;
+    }
+
+    PostService postService;
+
+    @Autowired
+    public void setPostService(PostService postService) {
+        this.postService = postService;
     }
 
     @Override
@@ -87,7 +100,7 @@ public class BoardIdServiceImpl implements BoardIdService {
             homework = new Homework();
             homework.setHwTerm(term);
             homework.setHwCcode(courseCode);
-            homework.setHwId(hwId);
+            homework.setHwId(Integer.valueOf(hwId));
         }
         return Board.builder()
                 .id(id)
@@ -137,8 +150,23 @@ public class BoardIdServiceImpl implements BoardIdService {
      */
     @Override
     public String generateIdFromHwId(String hwId, String term, String courseCode) {
-        
+        throw new NotImplementedException();
+    }
 
-        return null;
+    @Override
+    public List<Post> getPosts(String id) {
+        var board = parseId(id);
+        switch (board.getLocation()) {
+            case WEEKLY -> {
+                return postService.getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), false);
+            }
+            case HOMEWORK -> {
+                return postService.getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), false);
+            }
+            case COURSE -> {
+                return postService.getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), false);
+            }
+        }
+        return new ArrayList<>();
     }
 }

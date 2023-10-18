@@ -2,9 +2,9 @@
 set names gbk;
 
 /* 数据库名称改为 forum */
-drop database if exists forum;
-create database forum;
-use forum;
+drop database if exists forum_dev;
+create database forum_dev;
+use forum_dev;
 
 
 /* =================== homework 数据库 =================== */
@@ -133,22 +133,22 @@ group by left(hw_cno, length(hw_cno) - 2), hw_id;
 drop table if exists term;
 create table term
 (
-    term_no char(5) not null primary key comment '"2022/2023/2"形式的学期表示'
+    term_no char(11) not null primary key comment '"2022/2023/2"形式的学期表示'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = gbk
   COLLATE = gbk_bin COMMENT ='学期信息表';
 
 insert into term (term_no)
-values ('22231');
+values ('2023/2024/1');
 insert into term (term_no)
-values ('22232');
+values ('2023/2024/2');
 
 
 /* 课程 */
 drop table if exists course;
 create table course
 (
-    course_term  char(5)  not null comment '学期(主键+外键)',
+    course_term  char(11) not null comment '学期(主键+外键)',
     course_code  char(16) not null comment '课程代码',
     course_no    char(16) not null comment '课程序号(主键,目前同济的规则是代码+两位序号)',
     course_fname char(64) not null comment '教务系统中的全名',
@@ -161,21 +161,21 @@ create table course
   COLLATE = gbk_bin COMMENT ='课程信息表';
 
 insert into course
-values ('22232', '50002440016', '5000244001601', '高级语言程序设计', '高程01班', '1');
+values ('2023/2024/2', '50002440016', '5000244001601', '高级语言程序设计', '高程01班', '1');
 insert into course
-values ('22232', '50002440016', '5000244001602', '高级语言程序设计', '高程02班', '1');
+values ('2023/2024/2', '50002440016', '5000244001602', '高级语言程序设计', '高程02班', '1');
 insert into course
-values ('22232', '50002440016', '5000244001603', '高级语言程序设计', '高程03班', '1');
+values ('2023/2024/2', '50002440016', '5000244001603', '高级语言程序设计', '高程03班', '1');
 insert into course
-values ('22232', '50002440016', '5000244001604', '高级语言程序设计', '高程04班', '1');
+values ('2023/2024/2', '50002440016', '5000244001604', '高级语言程序设计', '高程04班', '1');
 insert into course
-values ('22232', '50002440016', '5000244001605', '高级语言程序设计', '高程05班', '1');
+values ('2023/2024/2', '50002440016', '5000244001605', '高级语言程序设计', '高程05班', '1');
 insert into course
-values ('22231', '101080', '10108002', '面向对象程序设计', '面向对象(嘉)', '1');
+values ('2023/2024/1', '101080', '10108002', '面向对象程序设计', '面向对象(嘉)', '1');
 insert into course
-values ('22231', '100692', '10069201', '高级语言程序设计', '高程(嘉)', '1');
+values ('2023/2024/1', '100692', '10069201', '高级语言程序设计', '高程(嘉)', '1');
 insert into course
-values ('22231', '50002440016', '5000244001601', '高级语言程序设计', '高程(国豪)', '1');
+values ('2023/2024/1', '50002440016', '5000244001601', '高级语言程序设计', '高程(国豪)', '1');
 
 
 /* 登录日志 */
@@ -228,7 +228,7 @@ delimiter ;
 drop table if exists homework_uploaded;
 create table homework_uploaded
 (
-    hwup_term        char(5)        not null comment '学期(主键+外键)',
+    hwup_term        char(11)       not null comment '学期(主键+外键)',
     hwup_ccode       char(16)       not null comment '课程序号(主键,对应course中的course_code 注意:不是外键关系,但要检查是否存在)',
     hwup_id          char(20)       not null comment '文件编号(例: 22232-030101-W0102)',
     hwup_week        tinyint        not null comment '布置周',
@@ -310,7 +310,7 @@ drop table if exists post;
 create table post
 (
     post_id            int primary key auto_increment comment 'ID(主键,自动增长)',
-    post_term          char(5)                                                       not null comment '学期(外键)',
+    post_term          char(11)                                                      not null comment '学期(外键)',
     post_ccode         char(16)                                                      not null comment '课程序号(对应course中的course_code 注意:不是外键关系,但要检查是否存在)',
     post_hwup_or_hw_id char(20)                                                      not null comment '对应的上传文件/具体作业的序号\n
                             如果是在第x周的整体问题处发帖,则本字段值为上传文件序号(''22232-000001-W0101'' - 必须在homework_uploaded中存在)\n

@@ -5,23 +5,35 @@
         select *
         from post
         where post_term = #{term}
-          and post_ccode = #{courseCode}
-          and post_hwup_or_hw_id like concat(#{term}, '-G%') /* 学期-G5位序号-W4位周次 */
+        and post_ccode = #{courseCode}
+        and post_hwup_or_hw_id like concat(#{term}, '-G%') /* 学期-G5位序号-W4位周次 */
+        <if test="!showHidden">
+            and post_is_del = '0'
+        </if>
+        order by post_priority, post_id desc
     </select>
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
         select *
         from post
         where post_term = #{term}
-          and post_ccode = #{courseCode}
-          and post_hwup_or_hw_id like concat(#{term}, '-%')
-          and left(post_hwup_or_hw_id, length(concat(#{term}, '-G'))) != concat(#{term}, '-G')
+        and post_ccode = #{courseCode}
+        and post_hwup_or_hw_id like concat(#{term}, '-%')
+        and left(post_hwup_or_hw_id, length(concat(#{term}, '-G'))) != concat(#{term}, '-G')
+        <if test="!showHidden">
+            and post_is_del = '0'
+        </if>
         /* 使用left和concat函数来少做一次like */
+        order by post_priority, post_id desc
     </select>
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
         select *
         from post
         where post_term = #{term}
-          and post_ccode = #{courseCode}
-          and post_hwup_or_hw_id = #{homeworkId}
+        and post_ccode = #{courseCode}
+        and post_hwup_or_hw_id = #{homeworkId}
+        <if test="!showHidden">
+            and post_is_del = '0'
+        </if>
+        order by post_priority, post_id desc
     </select>
 </mapper>

@@ -11,15 +11,15 @@ public interface PostService {
     /**
      * 获取课程整体的帖子
      */
-    List<Post> getCoursePosts(String term, String courseCode);
+    List<Post> getCoursePosts(String term, String courseCode, boolean showHidden);
 
     /**
      * 获取某周的整体帖子
      */
-    List<Post> getWeekPosts(String term, String courseCode, int week);
+    List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden);
 
     /**
      * 获取某次作业的帖子
      */
-    List<Post> getHomeworkPosts(String term, String courseCode, String homeworkId);
+    List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden);
 }

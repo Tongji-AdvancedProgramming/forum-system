@@ -181,7 +181,7 @@ public class CourseServiceImpl implements CourseService {
             var week = new CourseTree.Week();
             week.setNumber(i);
             week.setHomeworks(weekHomeworkMap.getOrDefault(i, new ArrayList<>()));
-            var chapters = week.getHomeworks().stream().map(Homework::getHwChapter).map(Object::toString).collect(Collectors.toSet());
+            var chapters = week.getHomeworks().stream().map(Homework::getHwChapter).filter(chapter -> chapter < 20).map(Object::toString).collect(Collectors.toSet());
             var weekTitle = new StringBuilder();
             weekTitle.append("第");
             weekTitle.append(i);

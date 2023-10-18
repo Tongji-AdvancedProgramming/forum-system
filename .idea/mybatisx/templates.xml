@@ -7,7 +7,7 @@
           <GenerateConfig>
             <option name="annotationType" value="MYBATIS_PLUS3" />
             <option name="basePackage" value="org.tongji.programming" />
-            <option name="basePath" value="src/main/java" />
+            <option name="basePath" value="api-base/src/main/java" />
             <option name="classNameStrategy" value="camel" />
             <option name="encoding" value="UTF-8" />
             <option name="extraClassSuffix" value="" />
@@ -49,66 +49,58 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Course" />
-                  <option name="tableName" value="course" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Homework" />
-                  <option name="tableName" value="homework" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="HomeworkUploaded" />
-                  <option name="tableName" value="homework_uploaded" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="LogHomework" />
-                  <option name="tableName" value="log_homework" />
-                </TableUIInfo>
-                <TableUIInfo>
                   <option name="className" value="LogHomeworkUploaded" />
                   <option name="tableName" value="log_homework_uploaded" />
                 </TableUIInfo>
                 <TableUIInfo>
-                  <option name="className" value="LogLogin" />
-                  <option name="tableName" value="log_login" />
+                  <option name="className" value="Course" />
+                  <option name="tableName" value="course" />
                 </TableUIInfo>
                 <TableUIInfo>
-                  <option name="className" value="LogPost" />
-                  <option name="tableName" value="log_post" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="LogRstpwd" />
-                  <option name="tableName" value="log_rstpwd" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Post" />
-                  <option name="tableName" value="post" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Student" />
-                  <option name="tableName" value="student" />
+                  <option name="className" value="Term" />
+                  <option name="tableName" value="term" />
                 </TableUIInfo>
                 <TableUIInfo>
                   <option name="className" value="StudentInfo" />
                   <option name="tableName" value="student_info" />
                 </TableUIInfo>
                 <TableUIInfo>
+                  <option name="className" value="LogPost" />
+                  <option name="tableName" value="log_post" />
+                </TableUIInfo>
+                <TableUIInfo>
+                  <option name="className" value="LogLogin" />
+                  <option name="tableName" value="log_login" />
+                </TableUIInfo>
+                <TableUIInfo>
                   <option name="className" value="Tag" />
                   <option name="tableName" value="tag" />
                 </TableUIInfo>
                 <TableUIInfo>
-                  <option name="className" value="Term" />
-                  <option name="tableName" value="term" />
+                  <option name="className" value="Post" />
+                  <option name="tableName" value="post" />
+                </TableUIInfo>
+                <TableUIInfo>
+                  <option name="className" value="HomeworkUploaded" />
+                  <option name="tableName" value="homework_uploaded" />
+                </TableUIInfo>
+                <TableUIInfo>
+                  <option name="className" value="Homework" />
+                  <option name="tableName" value="homework" />
+                </TableUIInfo>
+                <TableUIInfo>
+                  <option name="className" value="Student" />
+                  <option name="tableName" value="student" />
                 </TableUIInfo>
               </list>
             </option>
-            <option name="templatesName" value="default-all" />
+            <option name="templatesName" value="default-empty" />
             <option name="useLombokPlugin" value="true" />
           </GenerateConfig>
         </option>
         <option name="moduleName" value="api-base" />
         <option name="projectPath" value="$PROJECT_DIR$" />
-        <option name="templateName" value="default-all" />
+        <option name="templateName" value="default-empty" />
       </TemplateContext>
     </option>
   </component>

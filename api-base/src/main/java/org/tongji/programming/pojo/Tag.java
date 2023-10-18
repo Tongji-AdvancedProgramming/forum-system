@@ -18,22 +18,22 @@ public class Tag implements Serializable {
      * post表中tag的字段名
      */
     @TableId
-    private String tag_fieldname;
+    private String tagFieldname;
 
     /**
      * tag的中文解释
      */
-    private String tag_name;
+    private String tagName;
 
     /**
      * 对应tar的前景色(FF0000 - RGB方式表示的颜色,每两位表示一个16进制的颜色)
      */
-    private String tag_fgcolor;
+    private String tagFgcolor;
 
     /**
      * 对应tar的背景色(00FF00 - RGB方式表示的颜色,每两位表示一个16进制的颜色)
      */
-    private String tag_bgcolor;
+    private String tagBgcolor;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -50,20 +50,20 @@ public class Tag implements Serializable {
             return false;
         }
         Tag other = (Tag) that;
-        return (this.getTag_fieldname() == null ? other.getTag_fieldname() == null : this.getTag_fieldname().equals(other.getTag_fieldname()))
-            && (this.getTag_name() == null ? other.getTag_name() == null : this.getTag_name().equals(other.getTag_name()))
-            && (this.getTag_fgcolor() == null ? other.getTag_fgcolor() == null : this.getTag_fgcolor().equals(other.getTag_fgcolor()))
-            && (this.getTag_bgcolor() == null ? other.getTag_bgcolor() == null : this.getTag_bgcolor().equals(other.getTag_bgcolor()));
+        return (this.getTagFieldname() == null ? other.getTagFieldname() == null : this.getTagFieldname().equals(other.getTagFieldname()))
+            && (this.getTagName() == null ? other.getTagName() == null : this.getTagName().equals(other.getTagName()))
+            && (this.getTagFgcolor() == null ? other.getTagFgcolor() == null : this.getTagFgcolor().equals(other.getTagFgcolor()))
+            && (this.getTagBgcolor() == null ? other.getTagBgcolor() == null : this.getTagBgcolor().equals(other.getTagBgcolor()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getTag_fieldname() == null) ? 0 : getTag_fieldname().hashCode());
-        result = prime * result + ((getTag_name() == null) ? 0 : getTag_name().hashCode());
-        result = prime * result + ((getTag_fgcolor() == null) ? 0 : getTag_fgcolor().hashCode());
-        result = prime * result + ((getTag_bgcolor() == null) ? 0 : getTag_bgcolor().hashCode());
+        result = prime * result + ((getTagFieldname() == null) ? 0 : getTagFieldname().hashCode());
+        result = prime * result + ((getTagName() == null) ? 0 : getTagName().hashCode());
+        result = prime * result + ((getTagFgcolor() == null) ? 0 : getTagFgcolor().hashCode());
+        result = prime * result + ((getTagBgcolor() == null) ? 0 : getTagBgcolor().hashCode());
         return result;
     }
 
@@ -73,10 +73,10 @@ public class Tag implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", tag_fieldname=").append(tag_fieldname);
-        sb.append(", tag_name=").append(tag_name);
-        sb.append(", tag_fgcolor=").append(tag_fgcolor);
-        sb.append(", tag_bgcolor=").append(tag_bgcolor);
+        sb.append(", tagFieldname=").append(tagFieldname);
+        sb.append(", tagName=").append(tagName);
+        sb.append(", tagFgcolor=").append(tagFgcolor);
+        sb.append(", tagBgcolor=").append(tagBgcolor);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

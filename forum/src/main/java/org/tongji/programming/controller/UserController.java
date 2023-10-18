@@ -56,7 +56,7 @@ public class UserController {
 
     @Secured("ROLE_USER")
     @Operation(
-            summary = "当前用户是否需要完善信息",
+            summary = "当前用户是否需要完善信息（已废弃）",
             description = "主要是指头像、昵称之类的信息"
     )
     @RequestMapping(value = "/info-completion-needed", method = RequestMethod.GET)

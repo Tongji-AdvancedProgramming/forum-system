@@ -11,7 +11,21 @@
     </select>
 
     <select id="selectCourses" resultType="org.tongji.programming.pojo.Student">
-        select stu_term, stu_userlevel, stu_cno_1, stu_cno_1_is_del, stu_cno_2, stu_cno_2_is_del, stu_cno_3, stu_cno_3_is_del
+        select stu_term,
+               stu_userlevel,
+               stu_cno_1,
+               stu_cno_1_is_del,
+               stu_cno_2,
+               stu_cno_2_is_del,
+               stu_cno_3,
+               stu_cno_3_is_del
+        from student
+        where stu_no = #{id}
+        limit 1
+    </select>
+
+    <select id="selectById" resultType="org.tongji.programming.pojo.Student">
+        select *
         from student
         where stu_no = #{id}
         limit 1

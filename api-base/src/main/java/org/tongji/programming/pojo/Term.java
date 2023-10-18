@@ -18,7 +18,7 @@ public class Term implements Serializable {
      * "2022/2023/2"形式的学期表示
      */
     @TableId
-    private String term_no;
+    private String termNo;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -35,14 +35,14 @@ public class Term implements Serializable {
             return false;
         }
         Term other = (Term) that;
-        return (this.getTerm_no() == null ? other.getTerm_no() == null : this.getTerm_no().equals(other.getTerm_no()));
+        return (this.getTermNo() == null ? other.getTermNo() == null : this.getTermNo().equals(other.getTermNo()));
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getTerm_no() == null) ? 0 : getTerm_no().hashCode());
+        result = prime * result + ((getTermNo() == null) ? 0 : getTermNo().hashCode());
         return result;
     }
 
@@ -52,7 +52,7 @@ public class Term implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", term_no=").append(term_no);
+        sb.append(", termNo=").append(termNo);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
