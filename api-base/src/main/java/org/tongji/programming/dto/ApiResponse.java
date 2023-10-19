@@ -17,11 +17,11 @@ public class ApiResponse {
     private int code;
     private String msg;
 
-    public static @NotNull ApiResponse success(String msg){
-        return ApiResponse.builder().code(10000).msg(msg).build();
+    public static @NotNull ApiResponse success() {
+        return ApiResponse.builder().code(10000).msg("成功").build();
     }
 
-    public static @NotNull ApiResponse fail(int code, String msg){
+    public static @NotNull ApiResponse fail(int code, String msg) {
         return ApiResponse.builder().code(code).msg(msg).build();
     }
 }

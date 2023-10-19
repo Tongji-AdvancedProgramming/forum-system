@@ -93,8 +93,8 @@ public class SecurityConfig {
                         response.setContentType("application/json; charset=utf-8");
 
                         var out = response.getOutputStream();
-                        var resp = ApiResponse.success("登出成功");
-                        new ObjectMapper().writeValue(out,resp);
+                        var resp = ApiResponse.success();
+                        new ObjectMapper().writeValue(out, resp);
                         out.close();
                     }
                 }))
@@ -135,7 +135,7 @@ class forumAuthenticationSuccessHandler implements AuthenticationSuccessHandler 
         response.setStatus(200);
         response.setContentType("application/json");
 
-        var apiResponse = ApiResponse.success("登录成功");
+        var apiResponse = ApiResponse.success();
 
         var ip = RequestInfoHelper.getClientIpAddr(request);
         var ua = RequestInfoHelper.getUserAgent(request);

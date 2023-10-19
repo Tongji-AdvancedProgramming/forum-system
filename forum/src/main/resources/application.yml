@@ -17,5 +17,13 @@ spring:
 #    org.tongji.programming.mapper: debug
 
 forum:
+  forum:
+    cos-secret-id: AKIDOemkY7XltqjAZxAB9zgDdwJct5DJRYdl
+    cos-secret-key: OhqdMxW1NdmomdNzX3NZfhYI9vdEev22
+    cos-region: ap-shanghai
+    cos-bucket: forum-1305284863
+    cos-prefix: user-upload/
+    cos-result-baseurl: https://forum-1305284863.cos.ap-shanghai.myqcloud.com/
   user:
     default-avatar: https://forum-1305284863.cos.ap-shanghai.myqcloud.com/user-default.png
+

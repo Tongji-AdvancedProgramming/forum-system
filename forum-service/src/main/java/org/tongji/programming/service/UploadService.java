@@ -15,5 +15,5 @@ public interface UploadService {
      * @param stream     文件流
      * @return 图片URL
      */
-    String uploadImage(String uploaderId, InputStream stream);
+    String uploadImage(String uploaderId, InputStream stream, String suffix, String contentType);
 }
