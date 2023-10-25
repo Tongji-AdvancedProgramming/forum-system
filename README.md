@@ -7,3 +7,11 @@
 ### 系统设计原则
 
 尽可能低耦合。你可以看到我们用了Spring框架，把庞大的程序拆成了多个Maven项目。之后，如果你愿意，你还可以把它改成微服务。
+
+### Docker Registry 密码
+
+账号：forum_admin
+
+密码：aa29f16a84fa227e6a4dd50e1d520e29b310d74c95ee1146d2ffe97d599b1295
+
+参考[这篇文章](https://www.cnblogs.com/aloneysir/p/12801910.html)添加IP白名单。
