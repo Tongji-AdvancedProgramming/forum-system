@@ -13,4 +13,6 @@ public interface StudentMapper extends BaseMapper<Student> {
     Student selectIdPassLevel(@Param("id") String id);
 
     Student selectCourses(@Param("id") String id);
+
+    Student selectStuUserLevel(@Param("id") String id);
 }

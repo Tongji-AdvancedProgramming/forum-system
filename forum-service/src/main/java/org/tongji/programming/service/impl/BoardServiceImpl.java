@@ -37,13 +37,6 @@ public class BoardServiceImpl implements BoardService {
         this.homeworkMapper = homeworkMapper;
     }
 
-    PostService postService;
-
-    @Autowired
-    public void setPostService(PostService postService) {
-        this.postService = postService;
-    }
-
     @Override
     public Board parseId(String id) {
         // 首先切分ID
@@ -151,22 +144,5 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public String generateIdFromHwId(String hwId, String term, String courseCode) {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public List<Post> getPosts(String id) {
-        var board = parseId(id);
-        switch (board.getLocation()) {
-            case WEEKLY -> {
-                return postService.getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), false);
-            }
-            case HOMEWORK -> {
-                return postService.getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), false);
-            }
-            case COURSE -> {
-                return postService.getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), false);
-            }
-        }
-        return new ArrayList<>();
     }
 }

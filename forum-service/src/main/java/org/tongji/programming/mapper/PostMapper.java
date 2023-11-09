@@ -24,4 +24,9 @@ public interface PostMapper extends BaseMapper<Post> {
      * 获取某次作业的帖子
      */
     List<Post> getHomeworkPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("homeworkId") int homeworkId, @Param("showHidden") boolean showHidden);
+
+    /**
+     * 获取某课程的学期问题的最大编号的HwId
+     */
+    String getNewestGeneralQuestionId(@Param("term") String term, @Param("courseCode") String courseCode);
 }

@@ -36,4 +36,13 @@
         </if>
         order by post_priority, post_id desc
     </select>
+    <select id="getNewestGeneralQuestionId" resultType="java.lang.String">
+        select post_hwup_or_hw_id
+        from post
+        where post_term = #{term}
+          and post_ccode = #{courseCode}
+          and post_hwup_or_hw_id like concat(#{term}, '-G%')
+        order by post_hwup_or_hw_id desc
+        limit 1
+    </select>
 </mapper>

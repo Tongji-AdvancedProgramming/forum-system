@@ -4,15 +4,19 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
  * 发帖信息表
+ *
  * @TableName post
  */
-@TableName(value ="post")
+@TableName(value = "post")
 @Data
 public class Post implements Serializable {
     /**
@@ -33,12 +37,12 @@ public class Post implements Serializable {
 
     /**
      * 对应的上传文件/具体作业的序号
-
-                            如果是在第x周的整体问题处发帖,则本字段值为上传文件序号('22232-000001-W0101' - 必须在homework_uploaded中存在)
-
-                            如果是在第x周的某具体作业处发帖,则本字段值为具体作业序号('0401' - 必须在homework中存在)
-
-                            如果是在课程的整体问题处发帖(仅管理员及超级用户允许),则本字段值为"学期-G5位序号-W4位周次"('22232-G00001-W0101')
+     * <p>
+     * 如果是在第x周的整体问题处发帖,则本字段值为上传文件序号('22232-000001-W0101' - 必须在homework_uploaded中存在)
+     * <p>
+     * 如果是在第x周的某具体作业处发帖,则本字段值为具体作业序号('0401' - 必须在homework中存在)
+     * <p>
+     * 如果是在课程的整体问题处发帖(仅管理员及超级用户允许),则本字段值为"学期-G5位序号-W4位周次"('22232-G00001-W0101')
      */
     private String postHwupOrHwId;
 
@@ -54,19 +58,19 @@ public class Post implements Serializable {
 
     /**
      * 对应帖子的id(与post_id是外键关系)
-
-                            如果是发帖,则为NULL
-
-                            如果是回帖,则为对应帖子的post_id(以此为依据构建发帖回帖的树形结构)
+     * <p>
+     * 如果是发帖,则为NULL
+     * <p>
+     * 如果是回帖,则为对应帖子的post_id(以此为依据构建发帖回帖的树形结构)
      */
     private Integer postAnswerId;
 
     /**
      * 帖子类型('Question':首发问题 'QuestionsAdditional':追问 'Answer':回帖 'Other':其它 '/':预留)
-
-                            以 post_term + post_ccode + post_hwup_or_hw_id 为基准汇聚,具体排序规则?
-
-                            本字段是否多余?
+     * <p>
+     * 以 post_term + post_ccode + post_hwup_or_hw_id 为基准汇聚,具体排序规则?
+     * <p>
+     * 本字段是否多余?
      */
     private Object postType;
 
@@ -138,7 +142,7 @@ public class Post implements Serializable {
     /**
      * 发帖时间
      */
-    private Date postDate;
+    private LocalDateTime postDate;
 
     /**
      * 帖子是否已删除('0':正常显示 '1':不显示,包括所有的回帖 注意:enum不要当int处理)
@@ -166,29 +170,29 @@ public class Post implements Serializable {
         }
         Post other = (Post) that;
         return (this.getPostId() == null ? other.getPostId() == null : this.getPostId().equals(other.getPostId()))
-            && (this.getPostTerm() == null ? other.getPostTerm() == null : this.getPostTerm().equals(other.getPostTerm()))
-            && (this.getPostCcode() == null ? other.getPostCcode() == null : this.getPostCcode().equals(other.getPostCcode()))
-            && (this.getPostHwupOrHwId() == null ? other.getPostHwupOrHwId() == null : this.getPostHwupOrHwId().equals(other.getPostHwupOrHwId()))
-            && (this.getPostWeek() == null ? other.getPostWeek() == null : this.getPostWeek().equals(other.getPostWeek()))
-            && (this.getPostChapter() == null ? other.getPostChapter() == null : this.getPostChapter().equals(other.getPostChapter()))
-            && (this.getPostAnswerId() == null ? other.getPostAnswerId() == null : this.getPostAnswerId().equals(other.getPostAnswerId()))
-            && (this.getPostType() == null ? other.getPostType() == null : this.getPostType().equals(other.getPostType()))
-            && (this.getPostSno() == null ? other.getPostSno() == null : this.getPostSno().equals(other.getPostSno()))
-            && (this.getPostPriority() == null ? other.getPostPriority() == null : this.getPostPriority().equals(other.getPostPriority()))
-            && (this.getPostTag01() == null ? other.getPostTag01() == null : this.getPostTag01().equals(other.getPostTag01()))
-            && (this.getPostTag02() == null ? other.getPostTag02() == null : this.getPostTag02().equals(other.getPostTag02()))
-            && (this.getPostTag03() == null ? other.getPostTag03() == null : this.getPostTag03().equals(other.getPostTag03()))
-            && (this.getPostTag04() == null ? other.getPostTag04() == null : this.getPostTag04().equals(other.getPostTag04()))
-            && (this.getPostTag05() == null ? other.getPostTag05() == null : this.getPostTag05().equals(other.getPostTag05()))
-            && (this.getPostTag06() == null ? other.getPostTag06() == null : this.getPostTag06().equals(other.getPostTag06()))
-            && (this.getPostTag07() == null ? other.getPostTag07() == null : this.getPostTag07().equals(other.getPostTag07()))
-            && (this.getPostTag08() == null ? other.getPostTag08() == null : this.getPostTag08().equals(other.getPostTag08()))
-            && (this.getPostTag09() == null ? other.getPostTag09() == null : this.getPostTag09().equals(other.getPostTag09()))
-            && (this.getPostTag10() == null ? other.getPostTag10() == null : this.getPostTag10().equals(other.getPostTag10()))
-            && (this.getPostContent() == null ? other.getPostContent() == null : this.getPostContent().equals(other.getPostContent()))
-            && (this.getPostDate() == null ? other.getPostDate() == null : this.getPostDate().equals(other.getPostDate()))
-            && (this.getPostIsDel() == null ? other.getPostIsDel() == null : this.getPostIsDel().equals(other.getPostIsDel()))
-            && (this.getPostComment() == null ? other.getPostComment() == null : this.getPostComment().equals(other.getPostComment()));
+                && (this.getPostTerm() == null ? other.getPostTerm() == null : this.getPostTerm().equals(other.getPostTerm()))
+                && (this.getPostCcode() == null ? other.getPostCcode() == null : this.getPostCcode().equals(other.getPostCcode()))
+                && (this.getPostHwupOrHwId() == null ? other.getPostHwupOrHwId() == null : this.getPostHwupOrHwId().equals(other.getPostHwupOrHwId()))
+                && (this.getPostWeek() == null ? other.getPostWeek() == null : this.getPostWeek().equals(other.getPostWeek()))
+                && (this.getPostChapter() == null ? other.getPostChapter() == null : this.getPostChapter().equals(other.getPostChapter()))
+                && (this.getPostAnswerId() == null ? other.getPostAnswerId() == null : this.getPostAnswerId().equals(other.getPostAnswerId()))
+                && (this.getPostType() == null ? other.getPostType() == null : this.getPostType().equals(other.getPostType()))
+                && (this.getPostSno() == null ? other.getPostSno() == null : this.getPostSno().equals(other.getPostSno()))
+                && (this.getPostPriority() == null ? other.getPostPriority() == null : this.getPostPriority().equals(other.getPostPriority()))
+                && (this.getPostTag01() == null ? other.getPostTag01() == null : this.getPostTag01().equals(other.getPostTag01()))
+                && (this.getPostTag02() == null ? other.getPostTag02() == null : this.getPostTag02().equals(other.getPostTag02()))
+                && (this.getPostTag03() == null ? other.getPostTag03() == null : this.getPostTag03().equals(other.getPostTag03()))
+                && (this.getPostTag04() == null ? other.getPostTag04() == null : this.getPostTag04().equals(other.getPostTag04()))
+                && (this.getPostTag05() == null ? other.getPostTag05() == null : this.getPostTag05().equals(other.getPostTag05()))
+                && (this.getPostTag06() == null ? other.getPostTag06() == null : this.getPostTag06().equals(other.getPostTag06()))
+                && (this.getPostTag07() == null ? other.getPostTag07() == null : this.getPostTag07().equals(other.getPostTag07()))
+                && (this.getPostTag08() == null ? other.getPostTag08() == null : this.getPostTag08().equals(other.getPostTag08()))
+                && (this.getPostTag09() == null ? other.getPostTag09() == null : this.getPostTag09().equals(other.getPostTag09()))
+                && (this.getPostTag10() == null ? other.getPostTag10() == null : this.getPostTag10().equals(other.getPostTag10()))
+                && (this.getPostContent() == null ? other.getPostContent() == null : this.getPostContent().equals(other.getPostContent()))
+                && (this.getPostDate() == null ? other.getPostDate() == null : this.getPostDate().equals(other.getPostDate()))
+                && (this.getPostIsDel() == null ? other.getPostIsDel() == null : this.getPostIsDel().equals(other.getPostIsDel()))
+                && (this.getPostComment() == null ? other.getPostComment() == null : this.getPostComment().equals(other.getPostComment()));
     }
 
     @Override

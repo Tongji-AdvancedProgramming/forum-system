@@ -9,6 +9,7 @@ import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.Board;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.BoardService;
+import org.tongji.programming.service.PostService;
 
 import java.util.List;
 
@@ -27,10 +28,7 @@ public class BoardController {
 
     BoardService boardService;
 
-    @Autowired
-    public void setBoardIdService(BoardService boardService) {
-        this.boardService = boardService;
-    }
+    PostService postService;
 
     @Secured("ROLE_USER")
     @Operation(
@@ -47,6 +45,16 @@ public class BoardController {
     )
     @GetMapping("/post")
     public ApiDataResponse<List<Post>> getBoardPosts(@RequestParam String id) {
-        return ApiDataResponse.success(boardService.getPosts(id));
+        return ApiDataResponse.success(postService.getPosts(id));
+    }
+
+    @Autowired
+    public void setBoardIdService(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
+    @Autowired
+    public void setPostService(PostService postService) {
+        this.postService = postService;
     }
 }

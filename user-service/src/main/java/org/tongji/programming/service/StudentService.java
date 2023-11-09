@@ -9,4 +9,6 @@ public interface StudentService {
     boolean isInfoCompletionNeeded(String userId);
 
     Student getMe(String userId);
+
+    int getUserLevel(String userId);
 }

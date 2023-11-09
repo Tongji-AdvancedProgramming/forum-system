@@ -41,4 +41,13 @@ public class StudentServiceImpl implements StudentService {
     public Student getMe(String userId) {
         return studentMapper.selectById(userId);
     }
+
+    @Override
+    public int getUserLevel(String userId) {
+        var user = studentMapper.selectStuUserLevel(userId);
+        if (user == null) {
+            return 0;
+        }
+        return Integer.parseInt(user.getStuUserlevel());
+    }
 }

@@ -30,4 +30,10 @@
         where stu_no = #{id}
         limit 1
     </select>
+    <select id="selectStuUserLevel" resultType="org.tongji.programming.pojo.Student">
+        select stu_userlevel
+        from student
+        where stu_no = #{id}
+        limit 1
+    </select>
 </mapper>

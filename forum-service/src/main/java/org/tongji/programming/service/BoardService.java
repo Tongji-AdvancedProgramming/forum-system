@@ -25,9 +25,4 @@ public interface BoardService {
      * 由数据库中的hwId生成所属的板块Id
      */
     String generateIdFromHwId(String hwId, String term, String courseCode);
-
-    /**
-     * 获取板块内的帖子
-     */
-    List<Post> getPosts(String id);
 }
