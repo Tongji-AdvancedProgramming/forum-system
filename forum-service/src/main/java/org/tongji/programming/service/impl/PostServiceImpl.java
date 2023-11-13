@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public @Nullable String addPost(String userId, String boardId, String title, String content) {
+    public String addPost(String userId, String boardId, String title, String content) {
         var board = boardService.parseIdAndFetch(boardId);
 
         var post = new Post();
@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
                 post.setPostChapter(-1);
             }
             case WEEKLY -> {
-                post.setPostHwupOrHwId(""); // 待定
+                post.setPostHwupOrHwId(""); // TODO: 待定
                 post.setPostWeek(board.getWeek());
                 post.setPostChapter(-1);
 
@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        post.setPostChapter(null);
+        post.setPostAnswerId(null);
         post.setPostType("Question");
         post.setPostSno(userId);
         post.setPostPriority("0");
@@ -109,7 +109,7 @@ public class PostServiceImpl implements PostService {
 
         postMapper.insert(post);
 
-        return null;
+        return String.format("Success-%d", post.getPostId());
     }
 
     @Autowired

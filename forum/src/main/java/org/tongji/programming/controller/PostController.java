@@ -1,18 +1,20 @@
 package org.tongji.programming.controller;
 
+import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
+import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.PostService;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * 帖子控制器类
@@ -41,11 +43,26 @@ public class PostController {
             @Parameter(description = "帖子内容") @RequestPart String content
     ) {
         var result = postService.addPost(principal.getName(), boardId, title, content);
-        if (result == null) {
-            return ApiResponse.success();
+        if (result != null && result.startsWith("Success-")) {
+            var id = result.substring(8);
+            return ApiDataResponse.success(id);
         } else {
             return ApiResponse.fail(4000, result);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "列出帖子"
+    )
+    @GetMapping
+    public ApiDataResponse<List<Post>> listPost(
+            Principal principal,
+            @Parameter(description = "板块id") @RequestParam String boardId,
+            @Parameter(description = "分页: 页面大小") @RequestParam(defaultValue = "20") int pageSize,
+            @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
+    ) {
+        return ApiDataResponse.success(postService.getPosts(boardId));
     }
 
 
