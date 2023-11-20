@@ -2,21 +2,17 @@ package org.tongji.programming.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.tongji.programming.dto.ApiDataResponse;
-import org.tongji.programming.pojo.Course;
 import org.tongji.programming.service.UploadService;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 /**
  * 上传控制器类

@@ -1,12 +1,10 @@
 package org.tongji.programming.service.impl;
 
-import com.qcloud.cos.model.ObjectMetadata;
-import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.transfer.TransferManager;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.tongji.programming.service.UploadService;
 
 import java.io.InputStream;
@@ -18,20 +16,20 @@ import java.util.Date;
 @Service
 public class UploadServiceImpl implements UploadService {
 
-    @Value("${forum.forum.cos-bucket}")
+    @Value("${forum.s3.bucket}")
     private String bucket;
 
-    @Value("${forum.forum.cos-prefix}")
+    @Value("${forum.s3.prefix.upload}")
     private String prefix;
 
-    @Value("${forum.forum.cos-result-baseurl}")
+    @Value("${forum.s3.baseUrl}")
     private String baseUrl;
 
-    TransferManager transferManager;
+    MinioClient minioClient;
 
     @Autowired
-    public void setTransferManager(TransferManager transferManager) {
-        this.transferManager = transferManager;
+    public UploadServiceImpl(MinioClient minioClient) {
+        this.minioClient = minioClient;
     }
 
     @Override
@@ -39,17 +37,17 @@ public class UploadServiceImpl implements UploadService {
         long timeStamp = new Date().getTime();
         String key = String.format("%s/%s/%d.%s", prefix, uploaderId, timeStamp, suffix);
 
-        var meta = new ObjectMetadata();
-        meta.setContentType(contentType);
-
-        var putObjRequest = new PutObjectRequest(bucket, key, stream, meta);
-        var upload = transferManager.upload(putObjRequest);
+        var putObjArgs = PutObjectArgs.builder()
+                .bucket(bucket)
+                .object(key)
+                .stream(stream, -1, -1)
+                .contentType(contentType)
+                .build();
 
         try {
-            var result = upload.waitForUploadResult();
-            Assert.notNull(result.getKey(), "Upload Failed");
-            return baseUrl + result.getKey();
-        } catch (InterruptedException e) {
+            minioClient.putObject(putObjArgs);
+            return baseUrl + key;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
