@@ -42,6 +42,7 @@ public class UploadController {
     protected ApiDataResponse<String> addImages(Principal principal, MultipartFile file) throws IOException {
         var id = principal.getName();
         var type = file.getContentType();
+        var size = file.getSize();
         var suffix = file.getOriginalFilename();
         if (suffix != null) {
             suffix = suffix.substring(suffix.lastIndexOf('.') + 1);
@@ -49,7 +50,7 @@ public class UploadController {
             suffix = "";
         }
 
-        return ApiDataResponse.success(uploadService.uploadImage(id, file.getInputStream(), suffix, type));
+        return ApiDataResponse.success(uploadService.uploadImage(id, file.getInputStream(), suffix, type, size));
     }
 
 }

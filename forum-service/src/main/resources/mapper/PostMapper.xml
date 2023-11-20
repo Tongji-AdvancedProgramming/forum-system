@@ -2,7 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.tongji.programming.mapper.PostMapper">
     <select id="getCoursePosts" resultType="org.tongji.programming.pojo.Post">
-        select *
+        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
+        post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
+        <if test="showContent">
+            , post_content
+        </if>
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}
@@ -13,7 +18,12 @@
         order by post_priority, post_id desc
     </select>
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
-        select *
+        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
+        post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
+        <if test="showContent">
+            , post_content
+        </if>
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}
@@ -26,7 +36,12 @@
         order by post_priority, post_id desc
     </select>
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
-        select *
+        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
+        post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
+        <if test="showContent">
+            , post_content
+        </if>
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}

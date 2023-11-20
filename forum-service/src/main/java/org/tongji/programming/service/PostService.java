@@ -12,22 +12,22 @@ public interface PostService {
     /**
      * 获取板块内的帖子
      */
-    List<Post> getPosts(String boardId);
+    List<Post> getPosts(String boardId, boolean withContent);
 
     /**
      * 获取课程整体的帖子
      */
-    List<Post> getCoursePosts(String term, String courseCode, boolean showHidden);
+    List<Post> getCoursePosts(String term, String courseCode, boolean showHidden, boolean withContent);
 
     /**
      * 获取某周的整体帖子
      */
-    List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden);
+    List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden, boolean withContent);
 
     /**
      * 获取某次作业的帖子
      */
-    List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden);
+    List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden, boolean withContent);
 
     /**
      * 添加帖子

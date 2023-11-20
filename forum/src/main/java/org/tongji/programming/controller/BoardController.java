@@ -45,7 +45,7 @@ public class BoardController {
     )
     @GetMapping("/post")
     public ApiDataResponse<List<Post>> getBoardPosts(@RequestParam String id) {
-        return ApiDataResponse.success(postService.getPosts(id));
+        return ApiDataResponse.success(postService.getPosts(id, false));
     }
 
     @Autowired

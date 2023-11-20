@@ -10,10 +10,8 @@ import org.tongji.programming.service.BoardService;
 import org.tongji.programming.service.PostService;
 import org.tongji.programming.service.StudentService;
 
-import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -28,35 +26,35 @@ public class PostServiceImpl implements PostService {
     private StudentService studentService;
 
     @Override
-    public List<Post> getPosts(String boardId) {
+    public List<Post> getPosts(String boardId, boolean withContent) {
         var board = boardService.parseId(boardId);
         switch (board.getLocation()) {
             case WEEKLY -> {
-                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), false);
+                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), false, false);
             }
             case HOMEWORK -> {
-                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), false);
+                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), false, false);
             }
             case COURSE -> {
-                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), false);
+                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), false, false);
             }
         }
         return new ArrayList<>();
     }
 
     @Override
-    public List<Post> getCoursePosts(String term, String courseCode, boolean showHidden) {
-        return postMapper.getCoursePosts(term, courseCode, showHidden);
+    public List<Post> getCoursePosts(String term, String courseCode, boolean showHidden, boolean withContent) {
+        return postMapper.getCoursePosts(term, courseCode, showHidden, withContent);
     }
 
     @Override
-    public List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden) {
-        return postMapper.getWeekPosts(term, courseCode, week, showHidden);
+    public List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden, boolean withContent) {
+        return postMapper.getWeekPosts(term, courseCode, week, showHidden, withContent);
     }
 
     @Override
-    public List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden) {
-        return postMapper.getHomeworkPosts(term, courseCode, homeworkId, showHidden);
+    public List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden, boolean withContent) {
+        return postMapper.getHomeworkPosts(term, courseCode, homeworkId, showHidden, withContent);
     }
 
     @Override
@@ -104,6 +102,7 @@ public class PostServiceImpl implements PostService {
         post.setPostSno(userId);
         post.setPostPriority("0");
 
+        post.setPostTitle(title);
         post.setPostContent(content);
         post.setPostDate(LocalDateTime.now());
 

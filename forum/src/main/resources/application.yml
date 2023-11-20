@@ -26,6 +26,7 @@ forum:
     baseUrl: http://10.80.43.196/s3/forum
     prefix:
       upload: /user-upload/
+      avatar: /user-avatar/
   user:
-    default-avatar: https://forum-1305284863.cos.ap-shanghai.myqcloud.com/user-default.png
+    default-avatar: http://10.80.43.196/s3/forum/user-default.png
 

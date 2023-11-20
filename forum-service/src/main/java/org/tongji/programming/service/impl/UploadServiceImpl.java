@@ -33,14 +33,14 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public String uploadImage(String uploaderId, InputStream stream, String suffix, String contentType) {
+    public String uploadImage(String uploaderId, InputStream stream, String suffix, String contentType, long contentLength) {
         long timeStamp = new Date().getTime();
         String key = String.format("%s/%s/%d.%s", prefix, uploaderId, timeStamp, suffix);
 
         var putObjArgs = PutObjectArgs.builder()
                 .bucket(bucket)
                 .object(key)
-                .stream(stream, -1, -1)
+                .stream(stream, contentLength, -1)
                 .contentType(contentType)
                 .build();
 

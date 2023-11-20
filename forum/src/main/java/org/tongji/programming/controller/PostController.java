@@ -1,10 +1,8 @@
 package org.tongji.programming.controller;
 
-import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +60,7 @@ public class PostController {
             @Parameter(description = "分页: 页面大小") @RequestParam(defaultValue = "20") int pageSize,
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
-        return ApiDataResponse.success(postService.getPosts(boardId));
+        return ApiDataResponse.success(postService.getPosts(boardId, false));
     }
 
 

@@ -135,6 +135,11 @@ public class Post implements Serializable {
     private Object postTag10;
 
     /**
+     * 帖子标题
+     */
+    private String postTitle;
+
+    /**
      * 发帖具体内容(允许贴图,Richtext?)
      */
     private String postContent;
