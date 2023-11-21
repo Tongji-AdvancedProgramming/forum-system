@@ -85,10 +85,15 @@ public class UserController {
     @PostMapping("/avatar")
     protected ApiResponse putAvatar(Principal principal, @RequestPart("file") MultipartFile file) {
         var id = principal.getName();
+
+        if (file.getSize() > (5 << 20)) {
+            return ApiResponse.fail(5000, "图片不可大于5MB");
+        }
+
         try {
-            studentInfoService.uploadStudentAvatar(id, file.getInputStream());
+            studentInfoService.uploadStudentAvatar(id, file.getInputStream(), file.getContentType(), file.getSize());
         } catch (IOException e) {
-            return ApiResponse.fail(500, "读取用户上传文件失败");
+            return ApiResponse.fail(5000, "读取用户上传文件失败");
         }
         return ApiResponse.success();
     }

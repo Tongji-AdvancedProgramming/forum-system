@@ -29,4 +29,9 @@ public interface PostMapper extends BaseMapper<Post> {
      * 获取某课程的学期问题的最大编号的HwId
      */
     String getNewestGeneralQuestionId(@Param("term") String term, @Param("courseCode") String courseCode);
+
+    /**
+     * 递归查询某个帖子旗下的子帖子
+     */
+    List<Post> getPostsRecursively(@Param("id") Integer postId);
 }

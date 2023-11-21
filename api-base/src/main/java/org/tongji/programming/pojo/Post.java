@@ -87,51 +87,61 @@ public class Post implements Serializable {
     /**
      * 约定的tag 1标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_01")
     private Object postTag01;
 
     /**
      * 约定的tag 2标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_02")
     private Object postTag02;
 
     /**
      * 约定的tag 3标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_03")
     private Object postTag03;
 
     /**
      * 约定的tag 4标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_04")
     private Object postTag04;
 
     /**
      * 约定的tag 5标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_05")
     private Object postTag05;
 
     /**
      * 约定的tag 6标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_06")
     private Object postTag06;
 
     /**
      * 约定的tag 7标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_07")
     private Object postTag07;
 
     /**
      * 约定的tag 8标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_08")
     private Object postTag08;
 
     /**
      * 约定的tag 9标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_09")
     private Object postTag09;
 
     /**
      * 约定的tag 10标记(0:此标记未置位 1:此标记已置位)
      */
+    @TableField("post_tag_10")
     private Object postTag10;
 
     /**

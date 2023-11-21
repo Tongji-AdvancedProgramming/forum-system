@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.mapper.PostMapper;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.BoardService;
@@ -109,6 +110,19 @@ public class PostServiceImpl implements PostService {
         postMapper.insert(post);
 
         return String.format("Success-%d", post.getPostId());
+    }
+
+    @Override
+    public GetPostResponse getPost(Integer postId) {
+        var resp = new GetPostResponse();
+
+        var fatherPost = postMapper.selectById(postId);
+        var childPosts = postMapper.getPostsRecursively(postId);
+
+        resp.setPost(fatherPost);
+        resp.setFollowedPosts(childPosts);
+
+        return resp;
     }
 
     @Autowired

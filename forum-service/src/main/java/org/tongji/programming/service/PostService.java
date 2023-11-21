@@ -1,5 +1,6 @@
 package org.tongji.programming.service;
 
+import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.pojo.Post;
 
 import javax.annotation.Nullable;
@@ -34,4 +35,9 @@ public interface PostService {
      */
     @Nullable
     String addPost(String userId, String boardId, String title, String content);
+
+    /**
+     * 查询帖子，包含所有回帖及回帖的回帖
+     */
+    GetPostResponse getPost(Integer postId);
 }

@@ -17,6 +17,7 @@
         </if>
         order by post_priority, post_id desc
     </select>
+
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
         select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
@@ -35,6 +36,7 @@
         /* 使用left和concat函数来少做一次like */
         order by post_priority, post_id desc
     </select>
+
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
         select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
@@ -51,6 +53,7 @@
         </if>
         order by post_priority, post_id desc
     </select>
+
     <select id="getNewestGeneralQuestionId" resultType="java.lang.String">
         select post_hwup_or_hw_id
         from post
@@ -59,5 +62,18 @@
           and post_hwup_or_hw_id like concat(#{term}, '-G%')
         order by post_hwup_or_hw_id desc
         limit 1
+    </select>
+
+    <select id="getPostsRecursively" resultType="org.tongji.programming.pojo.Post">
+        with recursive tree_post as (select *
+                                     from post
+                                     where post_id = #{id}
+                                     union all
+                                     select post.*
+                                     from post
+                                              join tree_post on post.post_answer_id = tree_post.post_id)
+        select *
+        from tree_post
+        order by post_date
     </select>
 </mapper>

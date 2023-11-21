@@ -8,6 +8,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
+import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.PostService;
 
@@ -53,7 +54,7 @@ public class PostController {
     @Operation(
             summary = "列出帖子"
     )
-    @GetMapping
+    @GetMapping("/list")
     public ApiDataResponse<List<Post>> listPost(
             Principal principal,
             @Parameter(description = "板块id") @RequestParam String boardId,
@@ -61,6 +62,18 @@ public class PostController {
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
         return ApiDataResponse.success(postService.getPosts(boardId, false));
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "显示帖子（含回帖等）",
+            description = "用于在帖子页中使用，包含回帖等内容"
+    )
+    @GetMapping
+    public ApiDataResponse<GetPostResponse> getPost(
+            @RequestParam Integer postId
+    ) {
+        return ApiDataResponse.success(postService.getPost(postId));
     }
 
 

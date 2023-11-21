@@ -6,6 +6,7 @@ import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.tongji.programming.helper.ImageHelper;
 import org.tongji.programming.mapper.StudentInfoMapper;
 import org.tongji.programming.pojo.StudentInfo;
 import org.tongji.programming.service.StudentInfoService;
@@ -19,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
 import java.util.Iterator;
 
 /**
@@ -77,41 +77,14 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public int uploadStudentAvatar(String stuNo, InputStream fileStream) {
-        BufferedImage sourceImage;
+    public int uploadStudentAvatar(String stuNo, InputStream fileStream, String fileType, long fileSize) {
 
-        try {
-            sourceImage = ImageIO.read(fileStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        var targetImage = Scalr.resize(sourceImage, Scalr.Mode.AUTOMATIC, 256, 256);
-
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpeg");
-        ImageWriter writer = writers.next();
-
-        var param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(0.8f);
-
-        var byteArrayOutputStream = new ByteArrayOutputStream();
-        try {
-            ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
-            writer.setOutput(ios);
-            writer.write(null, new javax.imageio.IIOImage(targetImage, null, null), param);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-
-        String key = String.format("%s/%s.jpg", s3AvatarPrefix, stuNo);
+        String key = String.format("%s/%s", s3AvatarPrefix, stuNo);
         var putObjArgs = PutObjectArgs.builder()
                 .bucket(s3Bucket)
                 .object(key)
-                .stream(inputStream, byteArrayOutputStream.size(), -1)
-                .contentType("image/jpeg")
+                .stream(fileStream, fileSize, -1)
+                .contentType(fileType)
                 .build();
 
         try {
