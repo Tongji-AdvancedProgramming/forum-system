@@ -4,17 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.tongji.programming.dto.ApiDataResponse;
+import org.tongji.programming.dto.ApiResponse;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.pojo.StudentInfo;
 import org.tongji.programming.service.StudentInfoService;
 import org.tongji.programming.service.StudentService;
 
+import java.io.IOException;
 import java.security.Principal;
 
 /**
@@ -75,6 +76,21 @@ public class UserController {
     protected ApiDataResponse<StudentInfo> getMyInfo(Principal principal) {
         var id = principal.getName();
         return ApiDataResponse.success(studentInfoService.getByStuNo(id));
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "上传头像"
+    )
+    @PostMapping("/avatar")
+    protected ApiResponse putAvatar(Principal principal, @RequestPart("file") MultipartFile file) {
+        var id = principal.getName();
+        try {
+            studentInfoService.uploadStudentAvatar(id, file.getInputStream());
+        } catch (IOException e) {
+            return ApiResponse.fail(500, "读取用户上传文件失败");
+        }
+        return ApiResponse.success();
     }
 
 }

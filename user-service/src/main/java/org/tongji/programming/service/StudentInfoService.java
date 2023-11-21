@@ -12,5 +12,5 @@ public interface StudentInfoService {
 
     int setByStuNo(StudentInfo studentInfo);
 
-    int uploadStudentAvatar(String stuNo, InputStream fileStream, String fileType, long fileSize);
+    int uploadStudentAvatar(String stuNo, InputStream fileStream);
 }
