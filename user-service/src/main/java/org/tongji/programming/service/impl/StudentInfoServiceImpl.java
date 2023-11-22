@@ -1,11 +1,16 @@
 package org.tongji.programming.service.impl;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.imgscalr.Scalr;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.tongji.programming.dto.StudentShortInfo;
 import org.tongji.programming.helper.ImageHelper;
 import org.tongji.programming.mapper.StudentInfoMapper;
 import org.tongji.programming.pojo.StudentInfo;
@@ -21,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author cineazhan
@@ -64,7 +70,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
             var defaultOne = new StudentInfo();
             defaultOne.setStuNo(stuNo);
             defaultOne.setNickname(student.getStuName());
-            defaultOne.setAvatar(defaultAvatar);
+            defaultOne.setDescription("");
             studentInfoMapper.insert(defaultOne);
             result = defaultOne;
         }
@@ -94,5 +100,41 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }
 
         return 0;
+    }
+
+    private final LoadingCache<String, StudentShortInfo> shortInfoCache = CacheBuilder.newBuilder()
+            .maximumSize(150)
+            .build(new CacheLoader<>() {
+                @Override
+                public @NotNull StudentShortInfo load(@NotNull String key) {
+                    return studentInfoMapper.getStudentShortInfo(key);
+                }
+            });
+
+    @Override
+    public void setNickName(String userId, String newNickName) {
+        var si = new StudentInfo();
+        si.setStuNo(userId);
+        si.setNickname(newNickName);
+        studentInfoMapper.updateById(si);
+        shortInfoCache.refresh(userId);
+    }
+
+    @Override
+    public void setSignature(String userId, String newSignature) {
+        var si = new StudentInfo();
+        si.setStuNo(userId);
+        si.setDescription(newSignature);
+        studentInfoMapper.updateById(si);
+        shortInfoCache.refresh(userId);
+    }
+
+    @Override
+    public StudentShortInfo getStudentShortInfo(String id) {
+        try {
+            return shortInfoCache.get(id);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

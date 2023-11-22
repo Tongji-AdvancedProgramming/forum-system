@@ -2,14 +2,13 @@ package org.tongji.programming.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
+import org.tongji.programming.dto.StudentShortInfo;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.pojo.StudentInfo;
 import org.tongji.programming.service.StudentInfoService;
@@ -76,6 +75,38 @@ public class UserController {
     protected ApiDataResponse<StudentInfo> getMyInfo(Principal principal) {
         var id = principal.getName();
         return ApiDataResponse.success(studentInfoService.getByStuNo(id));
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "设置昵称"
+    )
+    @PostMapping("/nickName")
+    protected ApiResponse setNickName(Principal principal, @RequestPart String nickName) {
+        var id = principal.getName();
+        studentInfoService.setNickName(id, nickName);
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "设置签名档"
+    )
+    @PostMapping("/signature")
+    protected ApiResponse setSignature(Principal principal, @RequestPart String signature) {
+        var id = principal.getName();
+        studentInfoService.setSignature(id, signature);
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "指定用户的简短信息",
+            description = "返回的是一些帮助论坛更加友好运行的信息"
+    )
+    @GetMapping("/shortInfo")
+    protected ApiDataResponse<StudentShortInfo> getShortInfo(@RequestParam String id) {
+        return ApiDataResponse.success(studentInfoService.getStudentShortInfo(id));
     }
 
     @Secured("ROLE_USER")

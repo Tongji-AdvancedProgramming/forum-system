@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.tongji.programming.mapper.StudentInfoMapper">
     <select id="getStudentDefaultInfo" resultType="org.tongji.programming.pojo.Student">
-        select (stu_name) from student where stu_no = #{stuNo}
+        select (stu_name)
+        from student
+        where stu_no = #{stuNo}
+    </select>
+
+    <select id="getStudentShortInfo" resultType="org.tongji.programming.dto.StudentShortInfo">
+        select si.nickname       as nick_name,
+               si.description    as description,
+               s.stu_name        as real_name,
+               s.stu_no          as stu_no,
+               s.stu_class_sname as major,
+               s.stu_userlevel   as role
+        from student s
+                 left join student_info si on s.stu_no = si.stu_no
+        where s.stu_no = #{stuNo}
+        limit 1
     </select>
 </mapper>

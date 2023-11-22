@@ -1,5 +1,6 @@
 package org.tongji.programming.service;
 
+import org.tongji.programming.dto.StudentShortInfo;
 import org.tongji.programming.pojo.StudentInfo;
 
 import java.io.InputStream;
@@ -13,4 +14,10 @@ public interface StudentInfoService {
     int setByStuNo(StudentInfo studentInfo);
 
     int uploadStudentAvatar(String stuNo, InputStream fileStream, String fileType, long fileSize);
+
+    void setNickName(String userId, String newNickName);
+
+    void setSignature(String userId, String newSignature);
+
+    StudentShortInfo getStudentShortInfo(String id);
 }

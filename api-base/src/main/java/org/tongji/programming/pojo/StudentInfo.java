@@ -12,6 +12,7 @@ import lombok.Data;
 /**
  * 论坛运行所需要的其他数据
  *
+ * @author cinea
  * @TableName student_info
  */
 @TableName(value = "student_info")
@@ -24,9 +25,9 @@ public class StudentInfo implements Serializable {
     private String stuNo;
 
     /**
-     * 头像地址
+     * 签名档
      */
-    private String avatar;
+    private String description;
 
     /**
      * 昵称（如有，和实名同时显示）
@@ -49,7 +50,7 @@ public class StudentInfo implements Serializable {
         }
         StudentInfo other = (StudentInfo) that;
         return (this.getStuNo() == null ? other.getStuNo() == null : this.getStuNo().equals(other.getStuNo()))
-                && (this.getAvatar() == null ? other.getAvatar() == null : this.getAvatar().equals(other.getAvatar()))
+                && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
                 && (this.getNickname() == null ? other.getNickname() == null : this.getNickname().equals(other.getNickname()));
     }
 
@@ -58,7 +59,7 @@ public class StudentInfo implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getStuNo() == null) ? 0 : getStuNo().hashCode());
-        result = prime * result + ((getAvatar() == null) ? 0 : getAvatar().hashCode());
+        result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getNickname() == null) ? 0 : getNickname().hashCode());
         return result;
     }
@@ -70,7 +71,7 @@ public class StudentInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", stuNo=").append(stuNo);
-        sb.append(", avatar=").append(avatar);
+        sb.append(", description=").append(description);
         sb.append(", nickname=").append(nickname);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
