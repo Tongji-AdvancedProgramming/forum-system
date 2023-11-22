@@ -116,27 +116,17 @@ public class PostServiceImpl implements PostService {
     public GetPostResponse getPost(Integer postId) {
         var resp = new GetPostResponse();
 
-        var fatherPost = postMapper.selectById(postId);
-        var childPosts = postMapper.getPostsRecursively(postId);
+        var posts = postMapper.getPostsRecursively(postId);
 
-        resp.setPost(fatherPost);
-        resp.setFollowedPosts(childPosts);
+        resp.setPosts(posts);
 
         return resp;
     }
 
     @Autowired
-    public void setPostMapper(PostMapper postMapper) {
+    public PostServiceImpl(PostMapper postMapper, BoardService boardService, StudentService studentService) {
         this.postMapper = postMapper;
-    }
-
-    @Autowired
-    public void setBoardService(BoardService boardService) {
         this.boardService = boardService;
-    }
-
-    @Autowired
-    public void setStudentService(StudentService studentService) {
         this.studentService = studentService;
     }
 }

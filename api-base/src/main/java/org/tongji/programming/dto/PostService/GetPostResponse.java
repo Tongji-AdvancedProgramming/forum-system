@@ -12,6 +12,5 @@ import java.util.List;
  */
 @Data
 public class GetPostResponse {
-    private Post post;
-    private List<Post> followedPosts;
+    private List<Post> posts;
 }
