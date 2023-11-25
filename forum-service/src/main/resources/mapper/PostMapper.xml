@@ -15,6 +15,9 @@
         <if test="!showHidden">
             and post_is_del = '0'
         </if>
+        <if test="!withReplies">
+            and post_answer_id is null
+        </if>
         order by post_priority, post_id desc
     </select>
 
@@ -33,6 +36,9 @@
         <if test="!showHidden">
             and post_is_del = '0'
         </if>
+        <if test="!withReplies">
+            and post_answer_id is null
+        </if>
         /* 使用left和concat函数来少做一次like */
         order by post_priority, post_id desc
     </select>
@@ -50,6 +56,9 @@
         and post_hwup_or_hw_id = #{homeworkId}
         <if test="!showHidden">
             and post_is_del = '0'
+        </if>
+        <if test="!withReplies">
+            and post_answer_id is null
         </if>
         order by post_priority, post_id desc
     </select>
@@ -75,5 +84,33 @@
         select *
         from tree_post
         order by post_date
+    </select>
+    <select id="getPostWithoutContent" resultType="org.tongji.programming.pojo.Post">
+        select post_id,
+               post_term,
+               post_ccode,
+               post_hwup_or_hw_id,
+               post_week,
+               post_chapter,
+               post_answer_id,
+               post_type,
+               post_sno,
+               post_priority,
+               post_tag_01,
+               post_tag_02,
+               post_tag_03,
+               post_tag_04,
+               post_tag_05,
+               post_tag_06,
+               post_tag_07,
+               post_tag_08,
+               post_tag_09,
+               post_tag_10,
+               post_date,
+               post_is_del,
+               post_comment
+        from post
+        where post_id = #{postId}
+        limit 1;
     </select>
 </mapper>

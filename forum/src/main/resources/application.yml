@@ -11,6 +11,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: forum
     password: rememberus1nthed@yofend
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
 
 
 #logging:
@@ -27,6 +31,7 @@ forum:
     prefix:
       upload: /user-upload/
       avatar: /user-avatar/
+      cardBg: /user-card/
   user:
     default-avatar: http://10.80.43.196/s3/forum/user-default.png
 

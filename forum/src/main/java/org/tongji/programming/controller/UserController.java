@@ -2,6 +2,7 @@ package org.tongji.programming.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -84,6 +85,7 @@ public class UserController {
     @PostMapping("/nickName")
     protected ApiResponse setNickName(Principal principal, @RequestPart String nickName) {
         var id = principal.getName();
+        nickName = StringUtils.abbreviate(nickName, 8);
         studentInfoService.setNickName(id, nickName);
         return ApiResponse.success();
     }
@@ -95,6 +97,7 @@ public class UserController {
     @PostMapping("/signature")
     protected ApiResponse setSignature(Principal principal, @RequestPart String signature) {
         var id = principal.getName();
+        signature = StringUtils.abbreviate(signature, 18);
         studentInfoService.setSignature(id, signature);
         return ApiResponse.success();
     }
@@ -123,6 +126,26 @@ public class UserController {
 
         try {
             studentInfoService.uploadStudentAvatar(id, file.getInputStream(), file.getContentType(), file.getSize());
+        } catch (IOException e) {
+            return ApiResponse.fail(5000, "读取用户上传文件失败");
+        }
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "上传签名档背景"
+    )
+    @PostMapping("/cardBackground")
+    protected ApiResponse putCardBackground(Principal principal, @RequestPart("file") MultipartFile file) {
+        var id = principal.getName();
+
+        if (file.getSize() > (5 << 20)) {
+            return ApiResponse.fail(5000, "图片不可大于5MB");
+        }
+
+        try {
+            studentInfoService.uploadStudentCardBackground(id, file.getInputStream(), file.getContentType(), file.getSize());
         } catch (IOException e) {
             return ApiResponse.fail(5000, "读取用户上传文件失败");
         }

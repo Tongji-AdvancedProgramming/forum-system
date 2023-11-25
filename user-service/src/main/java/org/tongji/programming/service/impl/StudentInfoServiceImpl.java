@@ -5,27 +5,16 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tongji.programming.dto.StudentShortInfo;
-import org.tongji.programming.helper.ImageHelper;
 import org.tongji.programming.mapper.StudentInfoMapper;
 import org.tongji.programming.pojo.StudentInfo;
 import org.tongji.programming.service.StudentInfoService;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -48,6 +37,9 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
     @Value("${forum.s3.prefix.avatar}")
     private String s3AvatarPrefix;
+
+    @Value("${forum.s3.prefix.cardBg}")
+    private String s3CardBgPrefix;
 
     @Value("${forum.s3.baseUrl}")
     private String s3BaseUrl;
@@ -83,9 +75,21 @@ public class StudentInfoServiceImpl implements StudentInfoService {
     }
 
     @Override
-    public int uploadStudentAvatar(String stuNo, InputStream fileStream, String fileType, long fileSize) {
+    public void uploadStudentAvatar(String stuNo, InputStream fileStream, String fileType, long fileSize) {
 
-        String key = String.format("%s/%s", s3AvatarPrefix, stuNo);
+        uploadStudentAssets(stuNo, fileStream, fileType, fileSize, s3AvatarPrefix);
+
+    }
+
+    @Override
+    public void uploadStudentCardBackground(String stuNo, InputStream fileStream, String fileType, long fileSize) {
+
+        uploadStudentAssets(stuNo, fileStream, fileType, fileSize, s3CardBgPrefix);
+
+    }
+
+    private void uploadStudentAssets(String stuNo, InputStream fileStream, String fileType, long fileSize, String prefix) {
+        String key = String.format("%s/%s", prefix, stuNo);
         var putObjArgs = PutObjectArgs.builder()
                 .bucket(s3Bucket)
                 .object(key)
@@ -98,8 +102,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return 0;
     }
 
     private final LoadingCache<String, StudentShortInfo> shortInfoCache = CacheBuilder.newBuilder()
