@@ -67,7 +67,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
         // 如果超过限制，则拒绝请求
         var count = redisTemplate.opsForValue().increment(key, 1);
-        if (count != null && count > 10) {
+        if (count != null && count > 100) {
             redisTemplate.expire(key, 60, TimeUnit.SECONDS);
             response.setStatus(200);
             writeResponse(response, tooManyRequests());

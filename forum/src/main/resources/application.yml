@@ -34,4 +34,8 @@ forum:
       cardBg: /user-card/
   user:
     default-avatar: http://10.80.43.196/s3/forum/user-default.png
+  level:
+    ta: 1
+    admin: 5
+    super: 9
 

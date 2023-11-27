@@ -161,12 +161,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public GetPostResponse getPost(Integer postId, boolean withHidden) {
-        var resp = new GetPostResponse();
-
         var posts = postMapper.getPostsRecursively(postId);
-
+        if (!withHidden) {
+            posts.removeIf(post -> "1".equals(post.getPostIsDel()));
+        }
+        var resp = new GetPostResponse();
         resp.setPosts(posts);
-
         return resp;
     }
 

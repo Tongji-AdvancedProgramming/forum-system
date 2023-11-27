@@ -7,6 +7,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.tongji.programming.dto.CourseTree;
 import org.tongji.programming.mapper.CourseMapper;
@@ -27,6 +28,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class UserCourseServiceImpl implements UserCourseService {
+
+    @Value("${forum.level.ta}")
+    private int taLevel;
 
     StudentMapper studentMapper;
 
@@ -49,7 +53,7 @@ public class UserCourseServiceImpl implements UserCourseService {
             return new LinkedList<>();
         }
 
-        if (Integer.parseInt(stu.getStuUserlevel()) >= 5) {
+        if (Integer.parseInt(stu.getStuUserlevel()) >= taLevel) {
             // 用户是管理员或更高，可以访问所有课程。
             var wrapper = new QueryWrapper<Course>()
                     .groupBy("course_code")
@@ -71,9 +75,9 @@ public class UserCourseServiceImpl implements UserCourseService {
     LoadingCache<String, List<ImmutableList<String>>> getCoursesCache = CacheBuilder.newBuilder()
             .maximumSize(100)
             .expireAfterWrite(Duration.ofDays(1))
-            .build(new CacheLoader<String, List<ImmutableList<String>>>() {
+            .build(new CacheLoader<>() {
                 @Override
-                public @NotNull List<ImmutableList<String>> load(@NotNull String key) throws Exception {
+                public @NotNull List<ImmutableList<String>> load(@NotNull String key) {
                     return getCoursesLoads(key);
                 }
             });
@@ -93,7 +97,7 @@ public class UserCourseServiceImpl implements UserCourseService {
             return new LinkedList<>();
         }
 
-        if (Integer.parseInt(stu.getStuUserlevel()) >= 5) {
+        if (Integer.parseInt(stu.getStuUserlevel()) >= taLevel) {
             // 用户是管理员或更高，可以访问所有课程。
             var wrapper = new QueryWrapper<Course>()
                     .select("course_term", "course_no");

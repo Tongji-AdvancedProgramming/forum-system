@@ -2,6 +2,7 @@ package org.tongji.programming.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return new MessageDigestPasswordEncoder("MD5");
     }
 
+    @Value("${forum.level.ta}")
+    private int taLevel;
+
+    @Value("${forum.level.admin}")
+    private int adminLevel;
+
+    @Value("${forum.level.super}")
+    private int superLevel;
+
     StudentMapper studentMapper;
 
     @Autowired
@@ -46,16 +56,16 @@ public class UserDetailServiceImpl implements UserDetailsService {
         var roleList = new ArrayList<String>(2); // 性能调优：一般来说两个就够了
         var userLevel = Integer.parseInt(student.getStuUserlevel());
 
-        if (userLevel >= 9) {
+        if (userLevel >= superLevel) {
             roleList.add("USER");
             roleList.add("TA");
             roleList.add("ADMIN");
             roleList.add("SUPER");
-        } else if (userLevel >= 5) {
+        } else if (userLevel >= adminLevel) {
             roleList.add("USER");
             roleList.add("TA");
             roleList.add("ADMIN");
-        } else if (userLevel >= 2) {
+        } else if (userLevel >= taLevel) {
             roleList.add("USER");
             roleList.add("TA");
         } else {

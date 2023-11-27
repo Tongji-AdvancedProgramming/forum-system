@@ -142,10 +142,18 @@ public class PostController {
     public ApiDataResponse<GetPostResponse> getPost(
             Authentication authentication,
             @RequestParam Integer postId,
-            @RequestParam(defaultValue = "false") boolean withHidden
+            @RequestParam(defaultValue = "false") boolean showHidden
     ) {
-        System.out.println(authentication.getAuthorities());
-        return ApiDataResponse.success(postService.getPost(postId, withHidden));
+        if (showHidden) {
+            var authorities = authentication.getAuthorities();
+            if (authorities.stream().noneMatch(a -> "ROLE_TA".equals(a.getAuthority()))) {
+                var resp = new ApiDataResponse<GetPostResponse>();
+                resp.setCode(4003);
+                resp.setMsg("您无权查看隐藏帖子");
+                return resp;
+            }
+        }
+        return ApiDataResponse.success(postService.getPost(postId, showHidden));
     }
 
 

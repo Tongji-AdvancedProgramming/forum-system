@@ -85,6 +85,7 @@
         from tree_post
         order by post_date
     </select>
+
     <select id="getPostWithoutContent" resultType="org.tongji.programming.pojo.Post">
         select post_id,
                post_term,
