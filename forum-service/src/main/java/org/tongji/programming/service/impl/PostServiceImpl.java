@@ -1,6 +1,8 @@
 package org.tongji.programming.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.base.CaseFormat;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.tongji.programming.mapper.StudentMapper;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.service.BoardService;
+import org.tongji.programming.service.MetadataService;
 import org.tongji.programming.service.PostService;
 import org.tongji.programming.service.StudentService;
 
@@ -30,13 +33,15 @@ public class PostServiceImpl implements PostService {
     private final StudentMapper studentMapper;
     private final BoardService boardService;
     private final StudentService studentService;
+    private final MetadataService metadataService;
 
     @Autowired
-    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService) {
+    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService) {
         this.postMapper = postMapper;
         this.studentMapper = studentMapper;
         this.boardService = boardService;
         this.studentService = studentService;
+        this.metadataService = metadataService;
     }
 
     @Override
@@ -199,6 +204,32 @@ public class PostServiceImpl implements PostService {
         var updatePost = new Post();
         updatePost.setPostId(postId);
         updatePost.setPostContent(newContent);
+        postMapper.updateById(updatePost);
+    }
+
+    @SneakyThrows
+    @Override
+    public void setPostTag(String userId, Integer postId, int[] targetTags) {
+        var tags = metadataService.getTags();
+
+        // 记录日志
+
+        var clazz = Post.class;
+
+        var updatePost = new Post();
+        updatePost.setPostId(postId);
+        for (var tag : tags) {
+            var tagField = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tag.getTagFieldname());
+            clazz.getMethod("set" + tagField, Object.class).invoke(updatePost, "0");
+        }
+        for (var i : targetTags) {
+            if (i < 0 || i >= tags.length) {
+                continue;
+            }
+            var tagField = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tags[i].getTagFieldname());
+            clazz.getMethod("set" + tagField, Object.class).invoke(updatePost, "1");
+        }
+
         postMapper.updateById(updatePost);
     }
 

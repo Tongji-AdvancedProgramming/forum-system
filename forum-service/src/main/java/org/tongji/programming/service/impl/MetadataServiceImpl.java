@@ -1,5 +1,6 @@
 package org.tongji.programming.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tongji.programming.mapper.TagMapper;
@@ -28,7 +29,9 @@ public class MetadataServiceImpl implements MetadataService {
     @Override
     public Tag[] getTags() {
         if (LocalDateTime.now().isAfter(tagsCacheValidBefore)) {
-            tagsCache = tagMapper.selectList(null).toArray(new Tag[0]);
+            tagsCache = tagMapper.selectList(
+                    new QueryWrapper<Tag>().orderByAsc("tag_fieldname")
+            ).toArray(new Tag[0]);
             tagsCacheValidBefore = LocalDateTime.now().plusMinutes(30);
         }
         return tagsCache;

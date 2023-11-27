@@ -52,6 +52,11 @@ public interface PostService {
     void editPost(String userId, Integer postId, String newContent);
 
     /**
+     * 设置帖子标签
+     */
+    void setPostTag(String userId, Integer postId, int[] tag);
+
+    /**
      * 删除帖子
      */
     void deletePost(String userId, Integer postId);

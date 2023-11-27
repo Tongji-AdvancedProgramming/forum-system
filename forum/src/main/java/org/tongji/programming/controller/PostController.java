@@ -102,6 +102,27 @@ public class PostController {
 
     @Secured("ROLE_USER")
     @Operation(
+            summary = "设置帖子标签"
+    )
+    @PutMapping("/tag")
+    public ApiResponse setPostTag(
+            Principal principal,
+            @Parameter(description = "帖子id") @RequestParam String postId,
+            @Parameter(description = "标签id") @RequestParam int[] tag
+    ) {
+        var userId = principal.getName();
+        var postIdInteger = Integer.valueOf(postId);
+
+        if (postService.ensureEditPermission(userId, postIdInteger)) {
+            postService.setPostTag(userId, postIdInteger, tag);
+            return ApiResponse.success();
+        } else {
+            return ApiResponse.fail(4003, "您无权编辑此帖子");
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
             summary = "删除帖子或回复"
     )
     @DeleteMapping
