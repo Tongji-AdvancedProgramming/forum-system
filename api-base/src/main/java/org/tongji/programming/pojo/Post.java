@@ -43,7 +43,7 @@ public class Post implements Serializable {
      * <p>
      * 如果本项与week/chapter皆为-1，则表示帖子为学期总体问题
      */
-    private int postHwId;
+    private Integer postHwId;
 
     /**
      * 布置周(课程的整体问题则周次为-1)

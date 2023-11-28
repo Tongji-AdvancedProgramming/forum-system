@@ -13,10 +13,7 @@ import org.tongji.programming.mapper.PostMapper;
 import org.tongji.programming.mapper.StudentMapper;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.pojo.Student;
-import org.tongji.programming.service.BoardService;
-import org.tongji.programming.service.MetadataService;
-import org.tongji.programming.service.PostService;
-import org.tongji.programming.service.StudentService;
+import org.tongji.programming.service.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,14 +31,16 @@ public class PostServiceImpl implements PostService {
     private final BoardService boardService;
     private final StudentService studentService;
     private final MetadataService metadataService;
+    private final SearchEngineService searchEngineService;
 
     @Autowired
-    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService) {
+    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService, SearchEngineService searchEngineService) {
         this.postMapper = postMapper;
         this.studentMapper = studentMapper;
         this.boardService = boardService;
         this.studentService = studentService;
         this.metadataService = metadataService;
+        this.searchEngineService = searchEngineService;
     }
 
     private String[] resolveTags(String tags) {
@@ -59,7 +58,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts(String boardId, String tags, boolean withContent, boolean withReplies) {
+    public List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies) {
 
         // 解码Tags
         var tagNames = resolveTags(tags);
@@ -67,13 +66,13 @@ public class PostServiceImpl implements PostService {
         var board = boardService.parseId(boardId);
         switch (board.getLocation()) {
             case WEEKLY -> {
-                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), new String[]{}, false, false, withReplies);
+                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, false, withReplies);
             }
             case HOMEWORK -> {
-                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), new String[]{}, false, false, withReplies);
+                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), tagNames, showHidden, false, withReplies);
             }
             case COURSE -> {
-                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), new String[]{}, false, false, withReplies);
+                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, false, withReplies);
             }
         }
         return new ArrayList<>();
@@ -136,6 +135,7 @@ public class PostServiceImpl implements PostService {
         post.setPostDate(LocalDateTime.now());
 
         postMapper.insert(post);
+        searchEngineService.addPost(post.getPostId());
 
         return String.format("Success-%d", post.getPostId());
     }
@@ -170,6 +170,7 @@ public class PostServiceImpl implements PostService {
         }
 
         postMapper.insert(newPost);
+        searchEngineService.addPost(newPost.getPostId());
 
         return "";
     }
@@ -215,6 +216,8 @@ public class PostServiceImpl implements PostService {
         updatePost.setPostId(postId);
         updatePost.setPostContent(newContent);
         postMapper.updateById(updatePost);
+
+        searchEngineService.addPost(postId);
     }
 
     @SneakyThrows
@@ -240,6 +243,16 @@ public class PostServiceImpl implements PostService {
             clazz.getMethod("set" + tagField, Object.class).invoke(updatePost, "1");
         }
 
+        postMapper.updateById(updatePost);
+    }
+
+    @Override
+    public void setPostPriority(String userId, Integer postId, int priority) {
+        // 记录日志
+
+        var updatePost = new Post();
+        updatePost.setPostId(postId);
+        updatePost.setPostPriority(String.valueOf(priority));
         postMapper.updateById(updatePost);
     }
 

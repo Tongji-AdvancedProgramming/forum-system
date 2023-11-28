@@ -13,7 +13,7 @@ public interface PostService {
     /**
      * 获取板块内的帖子
      */
-    List<Post> getPosts(String boardId, String tags, boolean withContent, boolean withReplies);
+    List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies);
 
     /**
      * 获取课程整体的帖子
@@ -55,6 +55,11 @@ public interface PostService {
      * 设置帖子标签
      */
     void setPostTag(String userId, Integer postId, int[] tag);
+
+    /**
+     * 设置帖子优先级
+     */
+    void setPostPriority(String userId, Integer postId, int priority);
 
     /**
      * 删除帖子

@@ -17,7 +17,7 @@
         <if test="tagNames.length>0">
             and (
             <foreach collection="tagNames" item="tagName" separator="or">
-                #{tagName} = '1'
+                ${tagName} = '1'
             </foreach>
             )
         </if>
@@ -27,7 +27,7 @@
         <if test="!withReplies">
             and post_answer_id is null
         </if>
-        order by post_priority, post_id desc
+        order by post_priority desc, post_id desc
     </select>
 
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
@@ -45,7 +45,7 @@
         <if test="tagNames.length>0">
             and (
             <foreach collection="tagNames" item="tagName" separator="or">
-                #{tagName} = '1'
+                ${tagName} = '1'
             </foreach>
             )
         </if>
@@ -55,8 +55,7 @@
         <if test="!withReplies">
             and post_answer_id is null
         </if>
-        /* 使用left和concat函数来少做一次like */
-        order by post_priority, post_id desc
+        order by post_priority desc, post_id desc
     </select>
 
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
@@ -73,7 +72,7 @@
         <if test="tagNames.length>0">
             and (
             <foreach collection="tagNames" item="tagName" separator="or">
-                #{tagName} = '1'
+                ${tagName} = '1'
             </foreach>
             )
         </if>
@@ -83,7 +82,7 @@
         <if test="!withReplies">
             and post_answer_id is null
         </if>
-        order by post_priority, post_id desc
+        order by post_priority desc, post_id desc
     </select>
 
     <select id="getPostsRecursively" resultType="org.tongji.programming.pojo.Post">

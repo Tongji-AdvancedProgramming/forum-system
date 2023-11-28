@@ -13,7 +13,10 @@ import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.helper.EncodingHelper;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.PostService;
+import org.tongji.programming.service.SearchEngineService;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.List;
 
@@ -31,6 +34,13 @@ import java.util.List;
 public class PostController {
 
     PostService postService;
+    SearchEngineService searchEngineService;
+
+    @Autowired
+    public PostController(PostService postService, SearchEngineService searchEngineService) {
+        this.postService = postService;
+        this.searchEngineService = searchEngineService;
+    }
 
     @Secured("ROLE_USER")
     @Operation(
@@ -100,7 +110,7 @@ public class PostController {
         }
     }
 
-    @Secured("ROLE_USER")
+    @Secured("ROLE_TA")
     @Operation(
             summary = "设置帖子标签"
     )
@@ -113,12 +123,29 @@ public class PostController {
         var userId = principal.getName();
         var postIdInteger = Integer.valueOf(postId);
 
-        if (postService.ensureEditPermission(userId, postIdInteger)) {
-            postService.setPostTag(userId, postIdInteger, tag);
-            return ApiResponse.success();
-        } else {
-            return ApiResponse.fail(4003, "您无权编辑此帖子");
+        postService.setPostTag(userId, postIdInteger, tag);
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_TA")
+    @Operation(
+            summary = "设置帖子优先级"
+    )
+    @PutMapping("/priority")
+    public ApiResponse setPostPriority(
+            Principal principal,
+            @Parameter(description = "帖子id") @RequestParam String postId,
+            @Parameter(description = "优先级") @RequestParam int priority
+    ) {
+        var userId = principal.getName();
+        var postIdInteger = Integer.valueOf(postId);
+
+        if (priority < 0 || priority > 9) {
+            return ApiResponse.fail(4000, "优先级只能为0~9");
         }
+
+        postService.setPostPriority(userId, postIdInteger, priority);
+        return ApiResponse.success();
     }
 
     @Secured("ROLE_USER")
@@ -149,10 +176,12 @@ public class PostController {
     public ApiDataResponse<List<Post>> listPost(
             @Parameter(description = "板块id") @RequestParam String boardId,
             @Parameter(description = "标签序号") @RequestParam String tags,
+            @Parameter(description = "是否显示隐藏帖子") @RequestParam(defaultValue = "false") boolean showHidden,
             @Parameter(description = "分页: 页面大小") @RequestParam(defaultValue = "20") int pageSize,
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
-        return ApiDataResponse.success(postService.getPosts(boardId, tags, false, false));
+        tags = URLDecoder.decode(tags, StandardCharsets.UTF_8);
+        return ApiDataResponse.success(postService.getPosts(boardId, tags, showHidden, false, false));
     }
 
     @Secured("ROLE_USER")
@@ -178,9 +207,14 @@ public class PostController {
         return ApiDataResponse.success(postService.getPost(postId, showHidden));
     }
 
-
-    @Autowired
-    public void setPostService(PostService postService) {
-        this.postService = postService;
+    @Secured("ROLE_TA")
+    @Operation(
+            summary = "立即刷新搜索引擎缓存"
+    )
+    @GetMapping("/flush")
+    public ApiResponse flush(
+    ) {
+        searchEngineService.updateAllPost();
+        return ApiResponse.success();
     }
 }

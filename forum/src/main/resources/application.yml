@@ -38,4 +38,10 @@ forum:
     ta: 1
     admin: 5
     super: 9
+  meili:
+    host: http://10.80.42.189:7700
+    key: keI4qhrWElK6UqFt928AkKjDfIn1skn5cXcqP5sLaHo
+  search-engine:
+    post: post_dev
+
 
