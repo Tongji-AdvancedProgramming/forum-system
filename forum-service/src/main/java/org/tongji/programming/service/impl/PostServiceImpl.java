@@ -1,5 +1,6 @@
 package org.tongji.programming.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.CaseFormat;
 import lombok.SneakyThrows;
@@ -21,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * @author cinea
@@ -44,36 +44,54 @@ public class PostServiceImpl implements PostService {
         this.metadataService = metadataService;
     }
 
+    private String[] resolveTags(String tags) {
+        if ("[]".equals(tags)) {
+            return new String[0];
+        }
+        var tagList = metadataService.getTags();
+        var tagIndexes = JSON.parseArray(tags, Integer.class);
+        tagIndexes = tagIndexes.stream().filter(i -> i >= 0 && i < tagList.length).toList();
+        var tagNames = new String[tagIndexes.size()];
+        for (int i = 0; i < tagIndexes.size(); i++) {
+            tagNames[i] = tagList[tagIndexes.get(i)].getTagFieldname();
+        }
+        return tagNames;
+    }
+
     @Override
-    public List<Post> getPosts(String boardId, boolean withContent, boolean withReplies) {
+    public List<Post> getPosts(String boardId, String tags, boolean withContent, boolean withReplies) {
+
+        // 解码Tags
+        var tagNames = resolveTags(tags);
+
         var board = boardService.parseId(boardId);
         switch (board.getLocation()) {
             case WEEKLY -> {
-                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), false, false, withReplies);
+                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), new String[]{}, false, false, withReplies);
             }
             case HOMEWORK -> {
-                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), false, false, withReplies);
+                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), new String[]{}, false, false, withReplies);
             }
             case COURSE -> {
-                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), false, false, withReplies);
+                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), new String[]{}, false, false, withReplies);
             }
         }
         return new ArrayList<>();
     }
 
     @Override
-    public List<Post> getCoursePosts(String term, String courseCode, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getCoursePosts(term, courseCode, showHidden, withContent, withReplies);
+    public List<Post> getCoursePosts(String term, String courseCode, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
+        return postMapper.getCoursePosts(term, courseCode, tagNames, showHidden, withContent, withReplies);
     }
 
     @Override
-    public List<Post> getWeekPosts(String term, String courseCode, int week, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getWeekPosts(term, courseCode, week, showHidden, withContent, withReplies);
+    public List<Post> getWeekPosts(String term, String courseCode, int week, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
+        return postMapper.getWeekPosts(term, courseCode, week, tagNames, showHidden, withContent, withReplies);
     }
 
     @Override
-    public List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getHomeworkPosts(term, courseCode, homeworkId, showHidden, withContent, withReplies);
+    public List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
+        return postMapper.getHomeworkPosts(term, courseCode, homeworkId, tagNames, showHidden, withContent, withReplies);
     }
 
     @Override
@@ -90,27 +108,19 @@ public class PostServiceImpl implements PostService {
                 if (studentService.getUserLevel(userId) < 4) {
                     return "用户权限不足，不可在此发帖。";
                 }
-                var gId = 0;
-                var newestId = postMapper.getNewestGeneralQuestionId(post.getPostTerm(), post.getPostCcode());
-                var pattern = Pattern.compile(".*-G(\\d+)-.*");
-                var matcher = pattern.matcher(newestId);
-                if (matcher.find()) {
-                    gId = Integer.parseInt(matcher.group(0));
-                }
-
-                post.setPostHwupOrHwId(String.format("%s-G%05d-W0000", post.getPostTerm(), gId));
+                post.setPostHwId(-1);
                 post.setPostWeek(-1);
                 post.setPostChapter(-1);
             }
             case WEEKLY -> {
-                post.setPostHwupOrHwId(""); // TODO: 待定
+                post.setPostHwId(-1);
                 post.setPostWeek(board.getWeek());
                 post.setPostChapter(-1);
 
                 throw new NotImplementedException();
             }
             case HOMEWORK -> {
-                post.setPostHwupOrHwId(String.valueOf(board.getHomework().getHwId()));
+                post.setPostHwId(board.getHomework().getHwId());
                 post.setPostWeek(board.getWeek());
                 post.setPostChapter(board.getHomework().getHwChapter());
             }
@@ -140,7 +150,7 @@ public class PostServiceImpl implements PostService {
         var newPost = new Post();
         newPost.setPostTerm(fatherPost.getPostTerm());
         newPost.setPostCcode(fatherPost.getPostCcode());
-        newPost.setPostHwupOrHwId(fatherPost.getPostHwupOrHwId());
+        newPost.setPostHwId(fatherPost.getPostHwId());
         newPost.setPostWeek(fatherPost.getPostWeek());
         newPost.setPostChapter(fatherPost.getPostChapter());
 

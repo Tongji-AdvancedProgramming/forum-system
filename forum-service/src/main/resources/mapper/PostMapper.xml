@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.tongji.programming.mapper.PostMapper">
     <select id="getCoursePosts" resultType="org.tongji.programming.pojo.Post">
-        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
         post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
         <if test="showContent">
@@ -11,7 +11,16 @@
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}
-        and post_hwup_or_hw_id like concat(#{term}, '-G%') /* 学期-G5位序号-W4位周次 */
+        and post_hw_id = -1
+        and post_chapter = -1
+        and post_week = -1
+        <if test="tagNames.length>0">
+            and (
+            <foreach collection="tagNames" item="tagName" separator="or">
+                #{tagName} = '1'
+            </foreach>
+            )
+        </if>
         <if test="!showHidden">
             and post_is_del = '0'
         </if>
@@ -22,7 +31,7 @@
     </select>
 
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
-        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
         post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
         <if test="showContent">
@@ -31,8 +40,15 @@
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}
-        and post_hwup_or_hw_id like concat(#{term}, '-%')
-        and left(post_hwup_or_hw_id, length(concat(#{term}, '-G'))) != concat(#{term}, '-G')
+        and post_hw_id = -1
+        and post_week = #{week}
+        <if test="tagNames.length>0">
+            and (
+            <foreach collection="tagNames" item="tagName" separator="or">
+                #{tagName} = '1'
+            </foreach>
+            )
+        </if>
         <if test="!showHidden">
             and post_is_del = '0'
         </if>
@@ -44,7 +60,7 @@
     </select>
 
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
-        select post_id, post_term, post_ccode, post_hwup_or_hw_id, post_week, post_chapter, post_answer_id, post_type,
+        select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
         post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
         <if test="showContent">
@@ -53,7 +69,14 @@
         from post
         where post_term = #{term}
         and post_ccode = #{courseCode}
-        and post_hwup_or_hw_id = #{homeworkId}
+        and post_hw_id = #{homeworkId}
+        <if test="tagNames.length>0">
+            and (
+            <foreach collection="tagNames" item="tagName" separator="or">
+                #{tagName} = '1'
+            </foreach>
+            )
+        </if>
         <if test="!showHidden">
             and post_is_del = '0'
         </if>
@@ -61,16 +84,6 @@
             and post_answer_id is null
         </if>
         order by post_priority, post_id desc
-    </select>
-
-    <select id="getNewestGeneralQuestionId" resultType="java.lang.String">
-        select post_hwup_or_hw_id
-        from post
-        where post_term = #{term}
-          and post_ccode = #{courseCode}
-          and post_hwup_or_hw_id like concat(#{term}, '-G%')
-        order by post_hwup_or_hw_id desc
-        limit 1
     </select>
 
     <select id="getPostsRecursively" resultType="org.tongji.programming.pojo.Post">
@@ -90,7 +103,7 @@
         select post_id,
                post_term,
                post_ccode,
-               post_hwup_or_hw_id,
+               post_hw_id,
                post_week,
                post_chapter,
                post_answer_id,

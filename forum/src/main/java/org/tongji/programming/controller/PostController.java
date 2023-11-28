@@ -148,10 +148,11 @@ public class PostController {
     @GetMapping("/list")
     public ApiDataResponse<List<Post>> listPost(
             @Parameter(description = "板块id") @RequestParam String boardId,
+            @Parameter(description = "标签序号") @RequestParam String tags,
             @Parameter(description = "分页: 页面大小") @RequestParam(defaultValue = "20") int pageSize,
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
-        return ApiDataResponse.success(postService.getPosts(boardId, false, false));
+        return ApiDataResponse.success(postService.getPosts(boardId, tags, false, false));
     }
 
     @Secured("ROLE_USER")

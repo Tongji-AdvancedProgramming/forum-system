@@ -13,24 +13,19 @@ public interface PostMapper extends BaseMapper<Post> {
     /**
      * 获取课程整体的帖子
      */
-    List<Post> getCoursePosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
+    List<Post> getCoursePosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("tagNames") String[] tagNames, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
 
     /**
      * 获取某周的整体帖子
      */
-    List<Post> getWeekPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("week") int week, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
+    List<Post> getWeekPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("week") int week, @Param("tagNames") String[] tagNames, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
 
     /**
      * 获取某次作业的帖子
      */
-    List<Post> getHomeworkPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("homeworkId") int homeworkId, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
+    List<Post> getHomeworkPosts(@Param("term") String term, @Param("courseCode") String courseCode, @Param("homeworkId") int homeworkId, @Param("tagNames") String[] tagNames, @Param("showHidden") boolean showHidden, @Param("showContent") boolean showContent, @Param("withReplies") boolean withReplies);
 
     Post getPostWithoutContent(@Param("postId") Integer postId);
-
-    /**
-     * 获取某课程的学期问题的最大编号的HwId
-     */
-    String getNewestGeneralQuestionId(@Param("term") String term, @Param("courseCode") String courseCode);
 
     /**
      * 递归查询某个帖子旗下的子帖子

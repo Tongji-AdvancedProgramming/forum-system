@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 
 import lombok.Data;
 
@@ -36,15 +37,13 @@ public class Post implements Serializable {
     private String postCcode;
 
     /**
-     * 对应的上传文件/具体作业的序号
+     * 对应的具体作业的序号
      * <p>
-     * 如果是在第x周的整体问题处发帖,则本字段值为上传文件序号('22232-000001-W0101' - 必须在homework_uploaded中存在)
+     * 如果本项为空但week和/或chapter不为-1，则表示帖子为周总体问题或章节总体问题
      * <p>
-     * 如果是在第x周的某具体作业处发帖,则本字段值为具体作业序号('0401' - 必须在homework中存在)
-     * <p>
-     * 如果是在课程的整体问题处发帖(仅管理员及超级用户允许),则本字段值为"学期-G5位序号-W4位周次"('22232-G00001-W0101')
+     * 如果本项与week/chapter皆为-1，则表示帖子为学期总体问题
      */
-    private String postHwupOrHwId;
+    private int postHwId;
 
     /**
      * 布置周(课程的整体问题则周次为-1)
@@ -173,72 +172,16 @@ public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        Post other = (Post) that;
-        return (this.getPostId() == null ? other.getPostId() == null : this.getPostId().equals(other.getPostId()))
-                && (this.getPostTerm() == null ? other.getPostTerm() == null : this.getPostTerm().equals(other.getPostTerm()))
-                && (this.getPostCcode() == null ? other.getPostCcode() == null : this.getPostCcode().equals(other.getPostCcode()))
-                && (this.getPostHwupOrHwId() == null ? other.getPostHwupOrHwId() == null : this.getPostHwupOrHwId().equals(other.getPostHwupOrHwId()))
-                && (this.getPostWeek() == null ? other.getPostWeek() == null : this.getPostWeek().equals(other.getPostWeek()))
-                && (this.getPostChapter() == null ? other.getPostChapter() == null : this.getPostChapter().equals(other.getPostChapter()))
-                && (this.getPostAnswerId() == null ? other.getPostAnswerId() == null : this.getPostAnswerId().equals(other.getPostAnswerId()))
-                && (this.getPostType() == null ? other.getPostType() == null : this.getPostType().equals(other.getPostType()))
-                && (this.getPostSno() == null ? other.getPostSno() == null : this.getPostSno().equals(other.getPostSno()))
-                && (this.getPostPriority() == null ? other.getPostPriority() == null : this.getPostPriority().equals(other.getPostPriority()))
-                && (this.getPostTag01() == null ? other.getPostTag01() == null : this.getPostTag01().equals(other.getPostTag01()))
-                && (this.getPostTag02() == null ? other.getPostTag02() == null : this.getPostTag02().equals(other.getPostTag02()))
-                && (this.getPostTag03() == null ? other.getPostTag03() == null : this.getPostTag03().equals(other.getPostTag03()))
-                && (this.getPostTag04() == null ? other.getPostTag04() == null : this.getPostTag04().equals(other.getPostTag04()))
-                && (this.getPostTag05() == null ? other.getPostTag05() == null : this.getPostTag05().equals(other.getPostTag05()))
-                && (this.getPostTag06() == null ? other.getPostTag06() == null : this.getPostTag06().equals(other.getPostTag06()))
-                && (this.getPostTag07() == null ? other.getPostTag07() == null : this.getPostTag07().equals(other.getPostTag07()))
-                && (this.getPostTag08() == null ? other.getPostTag08() == null : this.getPostTag08().equals(other.getPostTag08()))
-                && (this.getPostTag09() == null ? other.getPostTag09() == null : this.getPostTag09().equals(other.getPostTag09()))
-                && (this.getPostTag10() == null ? other.getPostTag10() == null : this.getPostTag10().equals(other.getPostTag10()))
-                && (this.getPostContent() == null ? other.getPostContent() == null : this.getPostContent().equals(other.getPostContent()))
-                && (this.getPostDate() == null ? other.getPostDate() == null : this.getPostDate().equals(other.getPostDate()))
-                && (this.getPostIsDel() == null ? other.getPostIsDel() == null : this.getPostIsDel().equals(other.getPostIsDel()))
-                && (this.getPostComment() == null ? other.getPostComment() == null : this.getPostComment().equals(other.getPostComment()));
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return getPostHwId() == post.getPostHwId() && Objects.equals(getPostId(), post.getPostId()) && Objects.equals(getPostTerm(), post.getPostTerm()) && Objects.equals(getPostCcode(), post.getPostCcode()) && Objects.equals(getPostWeek(), post.getPostWeek()) && Objects.equals(getPostChapter(), post.getPostChapter()) && Objects.equals(getPostAnswerId(), post.getPostAnswerId()) && Objects.equals(getPostType(), post.getPostType()) && Objects.equals(getPostSno(), post.getPostSno()) && Objects.equals(getPostPriority(), post.getPostPriority()) && Objects.equals(getPostTag01(), post.getPostTag01()) && Objects.equals(getPostTag02(), post.getPostTag02()) && Objects.equals(getPostTag03(), post.getPostTag03()) && Objects.equals(getPostTag04(), post.getPostTag04()) && Objects.equals(getPostTag05(), post.getPostTag05()) && Objects.equals(getPostTag06(), post.getPostTag06()) && Objects.equals(getPostTag07(), post.getPostTag07()) && Objects.equals(getPostTag08(), post.getPostTag08()) && Objects.equals(getPostTag09(), post.getPostTag09()) && Objects.equals(getPostTag10(), post.getPostTag10()) && Objects.equals(getPostTitle(), post.getPostTitle()) && Objects.equals(getPostContent(), post.getPostContent()) && Objects.equals(getPostDate(), post.getPostDate()) && Objects.equals(getPostIsDel(), post.getPostIsDel()) && Objects.equals(getPostComment(), post.getPostComment());
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getPostId() == null) ? 0 : getPostId().hashCode());
-        result = prime * result + ((getPostTerm() == null) ? 0 : getPostTerm().hashCode());
-        result = prime * result + ((getPostCcode() == null) ? 0 : getPostCcode().hashCode());
-        result = prime * result + ((getPostHwupOrHwId() == null) ? 0 : getPostHwupOrHwId().hashCode());
-        result = prime * result + ((getPostWeek() == null) ? 0 : getPostWeek().hashCode());
-        result = prime * result + ((getPostChapter() == null) ? 0 : getPostChapter().hashCode());
-        result = prime * result + ((getPostAnswerId() == null) ? 0 : getPostAnswerId().hashCode());
-        result = prime * result + ((getPostType() == null) ? 0 : getPostType().hashCode());
-        result = prime * result + ((getPostSno() == null) ? 0 : getPostSno().hashCode());
-        result = prime * result + ((getPostPriority() == null) ? 0 : getPostPriority().hashCode());
-        result = prime * result + ((getPostTag01() == null) ? 0 : getPostTag01().hashCode());
-        result = prime * result + ((getPostTag02() == null) ? 0 : getPostTag02().hashCode());
-        result = prime * result + ((getPostTag03() == null) ? 0 : getPostTag03().hashCode());
-        result = prime * result + ((getPostTag04() == null) ? 0 : getPostTag04().hashCode());
-        result = prime * result + ((getPostTag05() == null) ? 0 : getPostTag05().hashCode());
-        result = prime * result + ((getPostTag06() == null) ? 0 : getPostTag06().hashCode());
-        result = prime * result + ((getPostTag07() == null) ? 0 : getPostTag07().hashCode());
-        result = prime * result + ((getPostTag08() == null) ? 0 : getPostTag08().hashCode());
-        result = prime * result + ((getPostTag09() == null) ? 0 : getPostTag09().hashCode());
-        result = prime * result + ((getPostTag10() == null) ? 0 : getPostTag10().hashCode());
-        result = prime * result + ((getPostContent() == null) ? 0 : getPostContent().hashCode());
-        result = prime * result + ((getPostDate() == null) ? 0 : getPostDate().hashCode());
-        result = prime * result + ((getPostIsDel() == null) ? 0 : getPostIsDel().hashCode());
-        result = prime * result + ((getPostComment() == null) ? 0 : getPostComment().hashCode());
-        return result;
+        return Objects.hash(getPostId(), getPostTerm(), getPostCcode(), getPostHwId(), getPostWeek(), getPostChapter(), getPostAnswerId(), getPostType(), getPostSno(), getPostPriority(), getPostTag01(), getPostTag02(), getPostTag03(), getPostTag04(), getPostTag05(), getPostTag06(), getPostTag07(), getPostTag08(), getPostTag09(), getPostTag10(), getPostTitle(), getPostContent(), getPostDate(), getPostIsDel(), getPostComment());
     }
 
     @Override
@@ -250,7 +193,7 @@ public class Post implements Serializable {
         sb.append(", postId=").append(postId);
         sb.append(", postTerm=").append(postTerm);
         sb.append(", postCcode=").append(postCcode);
-        sb.append(", postHwupOrHwId=").append(postHwupOrHwId);
+        sb.append(", postHwupOrHwId=").append(postHwId);
         sb.append(", postWeek=").append(postWeek);
         sb.append(", postChapter=").append(postChapter);
         sb.append(", postAnswerId=").append(postAnswerId);
