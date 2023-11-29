@@ -12,12 +12,8 @@ public interface SearchEngineService {
     void addPost(Integer postId);
 
     /**
-     * 向更新队列中插入一条Post
-     */
-    void updatePost(Integer postId);
-
-    /**
      * 【立即更新】插入全部帖子
      */
     void updateAllPost();
 }
+

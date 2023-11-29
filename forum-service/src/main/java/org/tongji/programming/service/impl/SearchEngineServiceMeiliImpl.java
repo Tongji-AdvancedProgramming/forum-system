@@ -1,11 +1,12 @@
 package org.tongji.programming.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.meilisearch.sdk.Client;
 import com.meilisearch.sdk.exceptions.MeilisearchException;
 import lombok.SneakyThrows;
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.HtmlCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,11 +24,19 @@ import java.util.LinkedList;
  */
 @Service
 public class SearchEngineServiceMeiliImpl implements SearchEngineService {
+    static HtmlCleaner htmlCleaner;
+
+    static {
+        CleanerProperties cleanerProps = new CleanerProperties();
+        cleanerProps.setPruneTags("script,style,pre,code");
+        htmlCleaner = new HtmlCleaner(cleanerProps);
+    }
+
     @Value("${forum.search-engine.post}")
     String postIndex;
-
     Client meiliClient;
     PostMapper postMapper;
+    Deque<Integer> postDeque = new LinkedList<>();
 
     @Autowired
     public SearchEngineServiceMeiliImpl(Client meiliClient, PostMapper postMapper) {
@@ -35,15 +44,31 @@ public class SearchEngineServiceMeiliImpl implements SearchEngineService {
         this.postMapper = postMapper;
     }
 
-    //    Deque<Integer> postAddDeque = new LinkedList<>();
-    Deque<Integer> postUpdateDeque = new LinkedList<>();
+    void preProcessPost(Post post) {
+        // 去除标签数据
+        post.setPostTag01(null);
+        post.setPostTag02(null);
+        post.setPostTag03(null);
+        post.setPostTag04(null);
+        post.setPostTag05(null);
+        post.setPostTag06(null);
+        post.setPostTag07(null);
+        post.setPostTag08(null);
+        post.setPostTag09(null);
+        post.setPostTag10(null);
+
+        // 清理content中的HTML标签和代码块
+        post.setPostContent(
+                htmlCleaner.clean(post.getPostContent()).getText().toString()
+        );
+    }
 
     // every 30 seconds
     @Scheduled(cron = "*/30 * * * * ?")
     void updatePosts() throws MeilisearchException {
         var addPosts = new ArrayList<Post>();
-        while (!postUpdateDeque.isEmpty()) {
-            var postId = postUpdateDeque.poll();
+        while (!postDeque.isEmpty()) {
+            var postId = postDeque.poll();
             var post = postMapper.selectById(postId);
             if (post == null) {
                 continue;
@@ -54,16 +79,7 @@ public class SearchEngineServiceMeiliImpl implements SearchEngineService {
                 continue;
             }
 
-            post.setPostTag01(null);
-            post.setPostTag02(null);
-            post.setPostTag03(null);
-            post.setPostTag04(null);
-            post.setPostTag05(null);
-            post.setPostTag06(null);
-            post.setPostTag07(null);
-            post.setPostTag08(null);
-            post.setPostTag09(null);
-            post.setPostTag10(null);
+            preProcessPost(post);
 
             addPosts.add(post);
         }
@@ -73,12 +89,7 @@ public class SearchEngineServiceMeiliImpl implements SearchEngineService {
 
     @Override
     public void addPost(Integer postId) {
-        postUpdateDeque.add(postId);
-    }
-
-    @Override
-    public void updatePost(Integer postId) {
-        postUpdateDeque.add(postId);
+        postDeque.add(postId);
     }
 
     @SneakyThrows
