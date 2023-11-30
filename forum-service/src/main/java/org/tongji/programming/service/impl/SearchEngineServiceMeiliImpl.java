@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.meilisearch.sdk.Client;
 import com.meilisearch.sdk.exceptions.MeilisearchException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.LinkedList;
  * @author cinea
  */
 @Service
+@Slf4j
 public class SearchEngineServiceMeiliImpl implements SearchEngineService {
     static HtmlCleaner htmlCleaner;
 
@@ -63,7 +65,6 @@ public class SearchEngineServiceMeiliImpl implements SearchEngineService {
         );
     }
 
-    // every 30 seconds
     @Scheduled(cron = "*/30 * * * * ?")
     void updatePosts() throws MeilisearchException {
         var addPosts = new ArrayList<Post>();

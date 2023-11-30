@@ -31,4 +31,9 @@ public interface PostMapper extends BaseMapper<Post> {
      * 递归查询某个帖子旗下的子帖子
      */
     List<Post> getPostsRecursively(@Param("id") Integer postId);
+
+    /**
+     * 递归查询某个帖子旗下的子帖子
+     */
+    List<Post> getPostsRecursively(@Param("id") Integer postId);
 }
