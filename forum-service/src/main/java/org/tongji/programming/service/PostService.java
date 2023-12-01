@@ -34,12 +34,12 @@ public interface PostService {
      * 添加帖子
      */
     @Nullable
-    String addPost(String userId, String boardId, String title, String content);
+    String addPost(String userId, String ipAddr, String boardId, String title, String content);
 
     /**
      * 添加回复
      */
-    String addReply(String userId, Integer fatherPost, String content);
+    String addReply(String userId, String ipAddr, Integer fatherPost, String content);
 
     /**
      * 确认用户可以编辑该帖子
@@ -49,25 +49,30 @@ public interface PostService {
     /**
      * 编辑帖子
      */
-    void editPost(String userId, Integer postId, String newContent);
+    void editPost(String userId, String ipAddr, Integer postId, String newContent);
 
     /**
      * 设置帖子标签
      */
-    void setPostTag(String userId, Integer postId, int[] tag);
+    void setPostTag(String userId, String ipAddr, Integer postId, int[] tag);
 
     /**
      * 设置帖子优先级
      */
-    void setPostPriority(String userId, Integer postId, int priority);
+    void setPostPriority(String userId, String ipAddr, Integer postId, int priority);
 
     /**
      * 删除帖子
      */
-    void deletePost(String userId, Integer postId);
+    void deletePost(String userId, String ipAddr, Integer postId);
 
     /**
      * 查询帖子，包含所有回帖及回帖的回帖
      */
     GetPostResponse getPost(Integer postId, boolean withHidden);
+
+    /**
+     * 查询帖子的父帖子
+     */
+    Integer getParentPost(Integer postId);
 }

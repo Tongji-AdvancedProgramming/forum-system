@@ -4,4 +4,7 @@
     <update id="logLogin" statementType="CALLABLE">
         {call proc_writelog_login(#{stuNo,mode=IN}, #{ipAddr,mode=IN}, #{userAgent,mode=IN}, #{comment,mode=IN})}
     </update>
+    <update id="logPost" statementType="CALLABLE">
+        {call proc_writelog_post(#{postNo,mode=IN}, #{stuNo,mode=IN}, #{ipAddr,mode=IN}, #{comment,mode=IN})}
+    </update>
 </mapper>

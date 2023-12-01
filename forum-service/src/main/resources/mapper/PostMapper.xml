@@ -126,4 +126,18 @@
         where post_id = #{postId}
         limit 1;
     </select>
+
+    <select id="getParentPostRecursively" resultType="org.tongji.programming.pojo.Post">
+        with recursive tree_post as (select post_id, post_answer_id
+                                     from post
+                                     where post_id = #{id}
+                                     union all
+                                     select post.post_id, post.post_answer_id
+                                     from post
+                                              join tree_post on post.post_id = tree_post.post_answer_id)
+        select post_id
+        from tree_post
+        where post_answer_id is null
+        limit 1
+    </select>
 </mapper>

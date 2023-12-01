@@ -29,16 +29,31 @@ public class LogServiceImpl implements LogService {
     @Override
     public void logLogin(String stuNo, String ipAddr, String userAgent, String comment) {
         // 如果StuNo为空就没必要执行了。这是因为数据库当前设计不支持错误的stuNo。
-        if (stuNo.isEmpty()) return;
-        
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    loggerMapper.logLogin(stuNo, ipAddr, userAgent, comment);
-                } catch (Exception e) {
-                    log.error("录入登录日志时失败：{}", e.getMessage());
-                }
+        if (stuNo.isEmpty()) {
+            return;
+        }
+
+        executor.execute(() -> {
+            try {
+                loggerMapper.logLogin(stuNo, ipAddr, userAgent, comment);
+            } catch (Exception e) {
+                log.error("录入登录日志时失败：{}", e.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void logPost(Integer postId, String stuNo, String ipAddr, String comment) {
+        // 如果StuNo为空就没必要执行了。这是因为数据库当前设计不支持错误的stuNo。
+        if (stuNo.isEmpty()) {
+            return;
+        }
+
+        executor.execute(() -> {
+            try {
+                loggerMapper.logPost(postId, stuNo, ipAddr, comment);
+            } catch (Exception e) {
+                log.error("录入帖子日志时失败：{}", e.getMessage());
             }
         });
     }

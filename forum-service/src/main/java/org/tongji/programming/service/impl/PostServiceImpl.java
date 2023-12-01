@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.CaseFormat;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.NotImplementedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tongji.programming.dto.PostService.GetPostResponse;
@@ -17,6 +16,7 @@ import org.tongji.programming.service.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,15 +32,16 @@ public class PostServiceImpl implements PostService {
     private final StudentService studentService;
     private final MetadataService metadataService;
     private final SearchEngineService searchEngineService;
+    private final LogService logService;
 
-    @Autowired
-    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService, SearchEngineService searchEngineService) {
+    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService, SearchEngineService searchEngineService, LogService logService) {
         this.postMapper = postMapper;
         this.studentMapper = studentMapper;
         this.boardService = boardService;
         this.studentService = studentService;
         this.metadataService = metadataService;
         this.searchEngineService = searchEngineService;
+        this.logService = logService;
     }
 
     private String[] resolveTags(String tags) {
@@ -95,7 +96,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String addPost(String userId, String boardId, String title, String content) {
+    public String addPost(String userId, String ipAddr, String boardId, String title, String content) {
         var board = boardService.parseIdAndFetch(boardId);
 
         var post = new Post();
@@ -137,11 +138,15 @@ public class PostServiceImpl implements PostService {
         postMapper.insert(post);
         searchEngineService.addPost(post.getPostId());
 
+        // 记录日志
+        var comment = "POST 内容为:" + content;
+        logService.logPost(post.getPostId(), userId, ipAddr, comment);
+
         return String.format("Success-%d", post.getPostId());
     }
 
     @Override
-    public String addReply(String userId, Integer fatherPostId, String content) {
+    public String addReply(String userId, String ipAddr, Integer fatherPostId, String content) {
         var fatherPost = postMapper.getPostWithoutContent(fatherPostId);
         if (fatherPost == null) {
             return null;
@@ -172,6 +177,10 @@ public class PostServiceImpl implements PostService {
         postMapper.insert(newPost);
         searchEngineService.addPost(newPost.getPostId());
 
+        // 记录日志
+        var comment = "POST 内容为:" + content;
+        logService.logPost(newPost.getPostId(), userId, ipAddr, comment);
+
         return "";
     }
 
@@ -184,6 +193,16 @@ public class PostServiceImpl implements PostService {
         var resp = new GetPostResponse();
         resp.setPosts(posts);
         return resp;
+    }
+
+    @Override
+    public Integer getParentPost(Integer postId) {
+        var parentPost = postMapper.getParentPostRecursively(postId);
+        if (parentPost == null) {
+            return null;
+        } else {
+            return parentPost.getPostId();
+        }
     }
 
     @Override
@@ -209,8 +228,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void editPost(String userId, Integer postId, String newContent) {
+    public void editPost(String userId, String ipAddr, Integer postId, String newContent) {
         // 记录日志
+        var comment = "EDIT 新内容为:" + newContent;
+        logService.logPost(postId, userId, ipAddr, comment);
 
         var updatePost = new Post();
         updatePost.setPostId(postId);
@@ -222,10 +243,12 @@ public class PostServiceImpl implements PostService {
 
     @SneakyThrows
     @Override
-    public void setPostTag(String userId, Integer postId, int[] targetTags) {
+    public void setPostTag(String userId, String ipAddr, Integer postId, int[] targetTags) {
         var tags = metadataService.getTags();
 
         // 记录日志
+        var comment = "TAG 新标签为：" + Arrays.toString(targetTags);
+        logService.logPost(postId, userId, ipAddr, comment);
 
         var clazz = Post.class;
 
@@ -247,8 +270,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void setPostPriority(String userId, Integer postId, int priority) {
+    public void setPostPriority(String userId, String ipAddr, Integer postId, int priority) {
         // 记录日志
+        var comment = "PRIORITY 新优先级为：" + priority;
+        logService.logPost(postId, userId, ipAddr, comment);
 
         var updatePost = new Post();
         updatePost.setPostId(postId);
@@ -257,8 +282,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(String userId, Integer postId) {
+    public void deletePost(String userId, String ipAddr, Integer postId) {
         // 记录日志
+        var comment = "DELETE";
+        logService.logPost(postId, userId, ipAddr, comment);
 
         var updatePost = new Post();
         updatePost.setPostId(postId);
