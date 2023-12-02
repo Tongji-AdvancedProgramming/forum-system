@@ -1,88 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.tongji.programming.mapper.PostMapper">
-    <select id="getCoursePosts" resultType="org.tongji.programming.pojo.Post">
+    <sql id="selectPostsPublicSelect">
         select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
         post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
         post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
-        <if test="showContent">
+        <if test="withContent">
             , post_content
         </if>
         from post
+    </sql>
+
+    <sql id="selectPostsPublicSelectCount">
+        select count(1)
+        from post
+    </sql>
+
+    <sql id="selectPostsPublicWhere">
+        <if test="tagNames.length>0">
+            and (
+            <foreach collection="tagNames" item="tagName" separator="or">
+                ${tagName} = '1'
+            </foreach>
+            )
+        </if>
+        <if test="!showHidden">
+            and post_is_del = '0'
+        </if>
+        <if test="!withReplies">
+            and post_answer_id is null
+        </if>
+        order by post_priority desc, post_id desc
+    </sql>
+
+    <select id="getCoursePosts" resultType="org.tongji.programming.pojo.Post">
+        <include refid="selectPostsPublicSelect"/>
         where post_term = #{term}
         and post_ccode = #{courseCode}
         and post_hw_id = -1
         and post_chapter = -1
         and post_week = -1
-        <if test="tagNames.length>0">
-            and (
-            <foreach collection="tagNames" item="tagName" separator="or">
-                ${tagName} = '1'
-            </foreach>
-            )
-        </if>
-        <if test="!showHidden">
-            and post_is_del = '0'
-        </if>
-        <if test="!withReplies">
-            and post_answer_id is null
-        </if>
-        order by post_priority desc, post_id desc
+        <include refid="selectPostsPublicWhere"/>
+        limit #{offset}, #{limit}
     </select>
 
     <select id="getWeekPosts" resultType="org.tongji.programming.pojo.Post">
-        select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
-        post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
-        post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
-        <if test="showContent">
-            , post_content
-        </if>
-        from post
+        <include refid="selectPostsPublicSelect"/>
         where post_term = #{term}
         and post_ccode = #{courseCode}
         and post_hw_id = -1
         and post_week = #{week}
-        <if test="tagNames.length>0">
-            and (
-            <foreach collection="tagNames" item="tagName" separator="or">
-                ${tagName} = '1'
-            </foreach>
-            )
-        </if>
-        <if test="!showHidden">
-            and post_is_del = '0'
-        </if>
-        <if test="!withReplies">
-            and post_answer_id is null
-        </if>
-        order by post_priority desc, post_id desc
+        <include refid="selectPostsPublicWhere"/>
+        limit #{offset}, #{limit}
     </select>
 
     <select id="getHomeworkPosts" resultType="org.tongji.programming.pojo.Post">
-        select post_id, post_term, post_ccode, post_hw_id, post_week, post_chapter, post_answer_id, post_type,
-        post_sno, post_priority, post_tag_01, post_tag_02, post_tag_03, post_tag_04, post_tag_05, post_tag_06,
-        post_tag_07, post_tag_08, post_tag_09, post_tag_10, post_title, post_date, post_is_del, post_comment
-        <if test="showContent">
-            , post_content
-        </if>
-        from post
+        <include refid="selectPostsPublicSelect"/>
         where post_term = #{term}
         and post_ccode = #{courseCode}
         and post_hw_id = #{homeworkId}
-        <if test="tagNames.length>0">
-            and (
-            <foreach collection="tagNames" item="tagName" separator="or">
-                ${tagName} = '1'
-            </foreach>
-            )
-        </if>
-        <if test="!showHidden">
-            and post_is_del = '0'
-        </if>
-        <if test="!withReplies">
-            and post_answer_id is null
-        </if>
-        order by post_priority desc, post_id desc
+        <include refid="selectPostsPublicWhere"/>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="getCourseSummaryPosts" resultType="org.tongji.programming.pojo.Post">
+        <include refid="selectPostsPublicSelect"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        <include refid="selectPostsPublicWhere"/>
+        limit #{offset}, #{limit}
+    </select>
+
+
+    <select id="getWeekSummaryPosts" resultType="org.tongji.programming.pojo.Post">
+        <include refid="selectPostsPublicSelect"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        and post_week = #{week}
+        <include refid="selectPostsPublicWhere"/>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="getCoursePostsCount" resultType="Integer">
+        <include refid="selectPostsPublicSelectCount"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        and post_hw_id = -1
+        and post_chapter = -1
+        and post_week = -1
+        <include refid="selectPostsPublicWhere"/>
+    </select>
+
+    <select id="getWeekPostsCount" resultType="Integer">
+        <include refid="selectPostsPublicSelectCount"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        and post_hw_id = -1
+        and post_week = #{week}
+        <include refid="selectPostsPublicWhere"/>
+    </select>
+
+    <select id="getHomeworkPostsCount" resultType="Integer">
+        <include refid="selectPostsPublicSelectCount"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        and post_hw_id = #{homeworkId}
+        <include refid="selectPostsPublicWhere"/>
+    </select>
+
+    <select id="getCourseSummaryPostsCount" resultType="Integer">
+        <include refid="selectPostsPublicSelectCount"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        <include refid="selectPostsPublicWhere"/>
+    </select>
+
+
+    <select id="getWeekSummaryPostsCount" resultType="Integer">
+        <include refid="selectPostsPublicSelectCount"/>
+        where post_term = #{term}
+        and post_ccode = #{courseCode}
+        and post_week = #{week}
+        <include refid="selectPostsPublicWhere"/>
     </select>
 
     <select id="getPostsRecursively" resultType="org.tongji.programming.pojo.Post">

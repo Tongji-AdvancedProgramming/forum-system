@@ -39,14 +39,14 @@ public class BoardController {
         return ApiDataResponse.success(boardService.parseIdAndFetch(id));
     }
 
-    @Secured("ROLE_USER")
-    @Operation(
-            summary = "根据板块id获取板块内的帖子s"
-    )
-    @GetMapping("/post")
-    public ApiDataResponse<List<Post>> getBoardPosts(@RequestParam String id) {
-        return ApiDataResponse.success(postService.getPosts(id, "[]", true, false, false));
-    }
+//    @Secured("ROLE_USER")
+//    @Operation(
+//            summary = "根据板块id获取板块内的帖子s"
+//    )
+//    @GetMapping("/post")
+//    public ApiDataResponse<List<Post>> getBoardPosts(@RequestParam String id) {
+//        return ApiDataResponse.success(postService.getPosts(id, "[]", true, false, false));
+//    }
 
     @Autowired
     public void setBoardIdService(BoardService boardService) {

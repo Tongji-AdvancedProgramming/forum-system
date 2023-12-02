@@ -41,8 +41,8 @@ public class BoardServiceImpl implements BoardService {
     public Board parseId(String id) {
         // 首先切分ID
         var tokens = id.split("_");
-        if (tokens.length != 3 && tokens.length != 4) {
-            throw new IllegalArgumentException("传入的ID格式不正确：组成部分不为3或4.");
+        if (tokens.length < 2 || tokens.length > 4) {
+            throw new IllegalArgumentException("传入的ID格式不正确：组成部分不为2、3或4.");
         }
 
         // 识别学期和课程
@@ -57,17 +57,21 @@ public class BoardServiceImpl implements BoardService {
 
         // 识别板块位置
         var location = PostLocation.HOMEWORK;
-        if (tokens.length == 3) {
+        if (tokens.length == 2) {
+            location = PostLocation.COURSE_SUMMARY;
+        } else if (tokens.length == 3) {
             if ("general".equals(tokens[2])) {
                 location = PostLocation.COURSE;
             } else {
                 location = PostLocation.WEEKLY;
             }
+        } else if ("p".equals(tokens[3])) {
+            location = PostLocation.WEEK_SUMMARY;
         }
 
         // 识别周次
         int week = 0;
-        if (location != PostLocation.COURSE) {
+        if (location != PostLocation.COURSE && location != PostLocation.COURSE_SUMMARY) {
             var weekStr = tokens[2].substring(1);
             try {
                 assert tokens[2].startsWith("w");

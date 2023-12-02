@@ -13,22 +13,12 @@ public interface PostService {
     /**
      * 获取板块内的帖子
      */
-    List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies);
+    List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies, int pageSize, int pageIndex);
 
     /**
-     * 获取课程整体的帖子
+     * 获取板块内的帖子数量
      */
-    List<Post> getCoursePosts(String term, String courseCode, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies);
-
-    /**
-     * 获取某周的整体帖子
-     */
-    List<Post> getWeekPosts(String term, String courseCode, int week, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies);
-
-    /**
-     * 获取某次作业的帖子
-     */
-    List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies);
+    Integer getPostsTotalCount(String boardId, String tags, boolean showHidden, boolean withReplies);
 
     /**
      * 添加帖子

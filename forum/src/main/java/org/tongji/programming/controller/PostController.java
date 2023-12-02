@@ -10,10 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
+import org.tongji.programming.dto.ListPostResult;
 import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.helper.EncodingHelper;
 import org.tongji.programming.helper.RequestInfoHelper;
-import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.PostService;
 import org.tongji.programming.service.SearchEngineService;
 
@@ -128,14 +128,25 @@ public class PostController {
     public ApiResponse setPostTag(
             Principal principal,
             HttpServletRequest request,
-            @Parameter(description = "帖子id") @RequestParam String postId,
-            @Parameter(description = "标签id") @RequestParam int[] tag
+            @Parameter(description = "帖子id") @RequestParam List<Integer> postId,
+            @Parameter(description = "标签id") @RequestParam(required = false) int[] tag
     ) {
+        // 如果tag为null，则将其设置为一个空数组
+        if (tag == null) {
+            tag = new int[0];
+        }
+
         var userId = principal.getName();
         var ipAddr = RequestInfoHelper.getClientIpAddr(request);
-        var postIdInteger = Integer.valueOf(postId);
 
-        postService.setPostTag(userId, ipAddr, postIdInteger, tag);
+        for (var pid : postId) {
+            if (!postService.ensureEditPermission(userId, pid)) {
+                return ApiResponse.fail(4003, "请求中存在无权设置标签的帖子");
+            }
+        }
+
+        int[] finalTag = tag;
+        postId.forEach(id -> postService.setPostTag(userId, ipAddr, id, finalTag));
         return ApiResponse.success();
     }
 
@@ -147,18 +158,23 @@ public class PostController {
     public ApiResponse setPostPriority(
             Principal principal,
             HttpServletRequest request,
-            @Parameter(description = "帖子id") @RequestParam String postId,
+            @Parameter(description = "帖子id") @RequestParam List<Integer> postId,
             @Parameter(description = "优先级") @RequestParam int priority
     ) {
         var userId = principal.getName();
         var ipAddr = RequestInfoHelper.getClientIpAddr(request);
-        var postIdInteger = Integer.valueOf(postId);
 
         if (priority < 0 || priority > 9) {
             return ApiResponse.fail(4000, "优先级只能为0~9");
         }
 
-        postService.setPostPriority(userId, ipAddr, postIdInteger, priority);
+        for (var pid : postId) {
+            if (!postService.ensureEditPermission(userId, pid)) {
+                return ApiResponse.fail(4003, "请求中存在无权设置优先级的帖子");
+            }
+        }
+
+        postId.forEach(id -> postService.setPostPriority(userId, ipAddr, id, priority));
         return ApiResponse.success();
     }
 
@@ -170,18 +186,19 @@ public class PostController {
     public ApiResponse deletePost(
             Principal principal,
             HttpServletRequest request,
-            @Parameter(description = "帖子id") @RequestParam String postId
+            @Parameter(description = "帖子id") @RequestParam List<Integer> postId
     ) {
         var userId = principal.getName();
         var ipAddr = RequestInfoHelper.getClientIpAddr(request);
-        var postIdInteger = Integer.valueOf(postId);
 
-        if (postService.ensureEditPermission(userId, postIdInteger)) {
-            postService.deletePost(userId, ipAddr, postIdInteger);
-            return ApiResponse.success();
-        } else {
-            return ApiResponse.fail(4003, "您无权删除此帖子");
+        for (var pid : postId) {
+            if (!postService.ensureEditPermission(userId, pid)) {
+                return ApiResponse.fail(4003, "请求中存在无权删除的帖子");
+            }
         }
+
+        postId.forEach(id -> postService.deletePost(userId, ipAddr, id));
+        return ApiResponse.success();
     }
 
     @Secured("ROLE_USER")
@@ -189,7 +206,7 @@ public class PostController {
             summary = "列出帖子"
     )
     @GetMapping("/list")
-    public ApiDataResponse<List<Post>> listPost(
+    public ApiDataResponse<ListPostResult> listPost(
             @Parameter(description = "板块id") @RequestParam String boardId,
             @Parameter(description = "标签序号") @RequestParam String tags,
             @Parameter(description = "是否显示隐藏帖子") @RequestParam(defaultValue = "false") boolean showHidden,
@@ -197,7 +214,12 @@ public class PostController {
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
         tags = URLDecoder.decode(tags, StandardCharsets.UTF_8);
-        return ApiDataResponse.success(postService.getPosts(boardId, tags, showHidden, false, false));
+        return ApiDataResponse.success(
+                ListPostResult.builder()
+                        .posts(postService.getPosts(boardId, tags, showHidden, false, false, pageSize, pageIndex))
+                        .totalCount(postService.getPostsTotalCount(boardId, tags, showHidden, false))
+                        .build()
+        );
     }
 
     @Secured("ROLE_USER")

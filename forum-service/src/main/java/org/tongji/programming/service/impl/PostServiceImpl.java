@@ -59,39 +59,58 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies) {
-
+    public List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies, int pageSize, int pageIndex) {
         // 解码Tags
         var tagNames = resolveTags(tags);
+
+        // 计算Offset
+        var offset = pageSize * (pageIndex - 1);
 
         var board = boardService.parseId(boardId);
         switch (board.getLocation()) {
             case WEEKLY -> {
-                return getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, false, withReplies);
+                return postMapper.getWeekPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, false, withReplies, pageSize, offset);
             }
             case HOMEWORK -> {
-                return getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), tagNames, showHidden, false, withReplies);
+                return postMapper.getHomeworkPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), tagNames, showHidden, false, withReplies, pageSize, offset);
             }
             case COURSE -> {
-                return getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, false, withReplies);
+                return postMapper.getCoursePosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, false, withReplies, pageSize, offset);
+            }
+            case WEEK_SUMMARY -> {
+                return postMapper.getWeekSummaryPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, false, withReplies, pageSize, offset);
+            }
+            case COURSE_SUMMARY -> {
+                return postMapper.getCourseSummaryPosts(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, false, withReplies, pageSize, offset);
             }
         }
         return new ArrayList<>();
     }
 
     @Override
-    public List<Post> getCoursePosts(String term, String courseCode, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getCoursePosts(term, courseCode, tagNames, showHidden, withContent, withReplies);
-    }
+    public Integer getPostsTotalCount(String boardId, String tags, boolean showHidden, boolean withReplies) {
+        // 解码Tags
+        var tagNames = resolveTags(tags);
 
-    @Override
-    public List<Post> getWeekPosts(String term, String courseCode, int week, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getWeekPosts(term, courseCode, week, tagNames, showHidden, withContent, withReplies);
-    }
-
-    @Override
-    public List<Post> getHomeworkPosts(String term, String courseCode, int homeworkId, String[] tagNames, boolean showHidden, boolean withContent, boolean withReplies) {
-        return postMapper.getHomeworkPosts(term, courseCode, homeworkId, tagNames, showHidden, withContent, withReplies);
+        var board = boardService.parseId(boardId);
+        switch (board.getLocation()) {
+            case WEEKLY -> {
+                return postMapper.getWeekPostsCount(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, withReplies);
+            }
+            case HOMEWORK -> {
+                return postMapper.getHomeworkPostsCount(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getHomework().getHwId(), tagNames, showHidden, withReplies);
+            }
+            case COURSE -> {
+                return postMapper.getCoursePostsCount(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, withReplies);
+            }
+            case WEEK_SUMMARY -> {
+                return postMapper.getWeekSummaryPostsCount(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), board.getWeek(), tagNames, showHidden, withReplies);
+            }
+            case COURSE_SUMMARY -> {
+                return postMapper.getCourseSummaryPostsCount(board.getCourse().getCourseTerm(), board.getCourse().getCourseCode(), tagNames, showHidden, withReplies);
+            }
+        }
+        return 0;
     }
 
     @Override

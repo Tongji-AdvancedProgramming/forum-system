@@ -22,5 +22,13 @@ public enum PostLocation {
     /**
      * 课程的整体问题
      */
-    COURSE
+    COURSE,
+    /**
+     * 周汇总，并非数据库内的存储位置
+     */
+    WEEK_SUMMARY,
+    /**
+     * 课程汇总，并非数据库内的存储位置
+     */
+    COURSE_SUMMARY
 }
