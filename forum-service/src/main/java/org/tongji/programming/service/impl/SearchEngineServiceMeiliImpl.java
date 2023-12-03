@@ -6,7 +6,6 @@ import com.meilisearch.sdk.Client;
 import com.meilisearch.sdk.exceptions.MeilisearchException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,24 +25,19 @@ import java.util.LinkedList;
 @Service
 @Slf4j
 public class SearchEngineServiceMeiliImpl implements SearchEngineService {
-    static HtmlCleaner htmlCleaner;
 
-    static {
-        CleanerProperties cleanerProps = new CleanerProperties();
-        cleanerProps.setPruneTags("script,style,pre,code");
-        htmlCleaner = new HtmlCleaner(cleanerProps);
-    }
-
+    private final Client meiliClient;
+    private final PostMapper postMapper;
+    private final HtmlCleaner htmlCleaner;
+    
     @Value("${forum.search-engine.post}")
     String postIndex;
-    Client meiliClient;
-    PostMapper postMapper;
     Deque<Integer> postDeque = new LinkedList<>();
 
-    @Autowired
-    public SearchEngineServiceMeiliImpl(Client meiliClient, PostMapper postMapper) {
+    public SearchEngineServiceMeiliImpl(Client meiliClient, PostMapper postMapper, HtmlCleaner htmlCleaner) {
         this.meiliClient = meiliClient;
         this.postMapper = postMapper;
+        this.htmlCleaner = htmlCleaner;
     }
 
     void preProcessPost(Post post) {

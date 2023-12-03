@@ -5,11 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.CaseFormat;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
+import org.htmlcleaner.HtmlCleaner;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tongji.programming.dto.PostService.GetPostResponse;
+import org.tongji.programming.enums.NotificationType;
 import org.tongji.programming.mapper.PostMapper;
 import org.tongji.programming.mapper.StudentMapper;
+import org.tongji.programming.pojo.Notification;
 import org.tongji.programming.pojo.Post;
 import org.tongji.programming.pojo.Student;
 import org.tongji.programming.service.*;
@@ -33,8 +38,17 @@ public class PostServiceImpl implements PostService {
     private final MetadataService metadataService;
     private final SearchEngineService searchEngineService;
     private final LogService logService;
+    private final UserCourseService userCourseService;
+    private final NotificationService notificationService;
+    private final HtmlCleaner htmlCleaner;
 
-    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService, SearchEngineService searchEngineService, LogService logService) {
+    @Value("${forum.level.ta}")
+    private Integer levelTA;
+
+    @Value("${forum.level.admin}")
+    private Integer levelAdmin;
+
+    public PostServiceImpl(PostMapper postMapper, StudentMapper studentMapper, BoardService boardService, StudentService studentService, MetadataService metadataService, SearchEngineService searchEngineService, LogService logService, UserCourseService userCourseService, NotificationService notificationService, HtmlCleaner htmlCleaner) {
         this.postMapper = postMapper;
         this.studentMapper = studentMapper;
         this.boardService = boardService;
@@ -42,6 +56,9 @@ public class PostServiceImpl implements PostService {
         this.metadataService = metadataService;
         this.searchEngineService = searchEngineService;
         this.logService = logService;
+        this.userCourseService = userCourseService;
+        this.notificationService = notificationService;
+        this.htmlCleaner = htmlCleaner;
     }
 
     private String[] resolveTags(String tags) {
@@ -56,6 +73,27 @@ public class PostServiceImpl implements PostService {
             tagNames[i] = tagList[tagIndexes.get(i)].getTagFieldname();
         }
         return tagNames;
+    }
+
+    @Override
+    public boolean ensureQueryPermission(String userId, Integer postId) {
+        var stuCourseCodes = userCourseService.getCourseCodes(userId);
+
+        var post = postMapper.selectOne(
+                new QueryWrapper<Post>().select("post_id", "post_term", "post_ccode")
+                        .eq("post_id", postId)
+        );
+
+        return stuCourseCodes.stream().anyMatch(c -> c.get(0).equals(post.getPostTerm()) && c.get(1).equals(post.getPostCcode()));
+    }
+
+    @Override
+    public boolean ensureQueryPermission(String userId, String boardId) {
+        var stuCourseCodes = userCourseService.getCourseCodes(userId);
+
+        var board = boardService.parseId(boardId);
+
+        return stuCourseCodes.stream().anyMatch(c -> c.get(0).equals(board.getCourse().getCourseTerm()) && c.get(1).equals(board.getCourse().getCourseCode()));
     }
 
     @Override
@@ -124,7 +162,7 @@ public class PostServiceImpl implements PostService {
 
         switch (board.getLocation()) {
             case COURSE -> {
-                if (studentService.getUserLevel(userId) < 4) {
+                if (studentService.getUserLevel(userId) < levelAdmin) {
                     return "用户权限不足，不可在此发帖。";
                 }
                 post.setPostHwId(-1);
@@ -142,6 +180,9 @@ public class PostServiceImpl implements PostService {
                 post.setPostHwId(board.getHomework().getHwId());
                 post.setPostWeek(board.getWeek());
                 post.setPostChapter(board.getHomework().getHwChapter());
+            }
+            default -> {
+                return "错误的传入参数，为保护系统不允许发帖。";
             }
         }
 
@@ -200,6 +241,22 @@ public class PostServiceImpl implements PostService {
         var comment = "POST 内容为:" + content;
         logService.logPost(newPost.getPostId(), userId, ipAddr, comment);
 
+        // 发送通知
+        if (!fatherPost.getPostSno().equals(userId)) {
+            var notification = Notification.builder()
+                    .title("收到新回复")
+                    .content(String.format(
+                            "%s收到新回复：%s",
+                            fatherPost.getPostAnswerId() == null ? "" : String.format("帖子《%s》", fatherPost.getPostTitle()),
+                            StringUtils.abbreviate(htmlCleaner.clean(newPost.getPostContent()).getText().toString(), "...", 20)
+                    ))
+                    .type(NotificationType.REPLY)
+                    .receiver(fatherPost.getPostSno())
+                    .build();
+
+            notificationService.sendNotification(notification);
+        }
+
         return "";
     }
 
@@ -242,6 +299,10 @@ public class PostServiceImpl implements PostService {
         var user = studentMapper.selectOne(
                 new QueryWrapper<Student>().select("stu_userlevel").eq("stu_no", userId)
         );
+
+        if ("1".equals(user.getStuIsDel())) {
+            return false;
+        }
 
         return Integer.parseInt(postUser.getStuUserlevel()) < Integer.parseInt(user.getStuUserlevel());
     }

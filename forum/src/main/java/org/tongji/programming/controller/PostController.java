@@ -207,12 +207,18 @@ public class PostController {
     )
     @GetMapping("/list")
     public ApiDataResponse<ListPostResult> listPost(
+            Principal principal,
             @Parameter(description = "板块id") @RequestParam String boardId,
             @Parameter(description = "标签序号") @RequestParam String tags,
             @Parameter(description = "是否显示隐藏帖子") @RequestParam(defaultValue = "false") boolean showHidden,
             @Parameter(description = "分页: 页面大小") @RequestParam(defaultValue = "20") int pageSize,
             @Parameter(description = "分页: 页面编号") @RequestParam(defaultValue = "1") int pageIndex
     ) {
+        var userId = principal.getName();
+        if (!postService.ensureQueryPermission(userId, boardId)) {
+            return ApiDataResponse.dataFail(4003, "您无权查看本板块");
+        }
+
         tags = URLDecoder.decode(tags, StandardCharsets.UTF_8);
         return ApiDataResponse.success(
                 ListPostResult.builder()
@@ -229,6 +235,7 @@ public class PostController {
     )
     @GetMapping
     public ApiDataResponse<GetPostResponse> getPost(
+            Principal principal,
             Authentication authentication,
             @RequestParam Integer postId,
             @RequestParam(defaultValue = "false") boolean showHidden
@@ -242,6 +249,12 @@ public class PostController {
                 return resp;
             }
         }
+
+        var userId = principal.getName();
+        if (!postService.ensureQueryPermission(userId, postId)) {
+            return ApiDataResponse.dataFail(4003, "您无权查看本帖子");
+        }
+
         return ApiDataResponse.success(postService.getPost(postId, showHidden));
     }
 

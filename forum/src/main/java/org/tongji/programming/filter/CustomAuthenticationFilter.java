@@ -151,7 +151,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private ApiDataResponse<String> tooManyRequests() {
-        var resp = new ApiDataResponse<>("每次登录行为都会记录IP，校园网内IP可直接追溯到人，爆破行为百害无利。");
+        var resp = new ApiDataResponse<String>();
+        resp.setData("每次登录行为都会记录IP，校园网内IP可直接追溯到人，爆破行为百害无利。");
         resp.setCode(4029);
         resp.setMsg("您的操作太频繁了，请等会再来吧");
         return resp;

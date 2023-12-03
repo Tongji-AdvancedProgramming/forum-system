@@ -45,21 +45,19 @@ import java.io.IOException;
 public class SecurityConfig {
 
     UserDetailsService userDetailsService;
+    CustomAuthenticationFilter customAuthenticationFilter;
+    AuthenticationSuccessHandler authenticationSuccessHandler;
+    AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
-    CustomAuthenticationFilter customAuthenticationFilter;
-
     @Autowired
     public void setCustomAuthenticationFilter(CustomAuthenticationFilter customAuthenticationFilter) {
         this.customAuthenticationFilter = customAuthenticationFilter;
     }
-
-    AuthenticationSuccessHandler authenticationSuccessHandler;
-    AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
     public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
@@ -101,7 +99,8 @@ public class SecurityConfig {
                 .exceptionHandling(config -> config.authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                        var resp = new ApiDataResponse<String>(
+                        var resp = new ApiDataResponse<String>();
+                        resp.setData(
                                 "你看到了这条消息，说明你正在使用浏览器、API测试工具、curl等工具来手动访问我们的接口。很显然，你正在访问一个受限的接口，而接口拒绝了你，因为你没有登录。出于个人的、学习的、非侵入的目的，使用我们系统的接口，我作为一个曾经的极客，原则上是不反对的。但是希望你谨慎调用，切勿滥用，否则可能会被封禁账号、上报教师，滥用接口对系统造成严重破坏的，教师可能会上报学院/学校。请君自重。供开发者使用的login页面位于后端的/login.html端点，生产版本中可能需要加上/api前缀，请你自己探究。" +
                                         "用于调试的信息：" + request.getRequestURI()
                         );

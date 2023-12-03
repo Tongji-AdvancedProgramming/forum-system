@@ -11,6 +11,16 @@ import java.util.List;
  */
 public interface PostService {
     /**
+     * 确认用户可以查询该帖子
+     */
+    boolean ensureQueryPermission(String userId, Integer postId);
+
+    /**
+     * 确认用户可以查询该板块
+     */
+    boolean ensureQueryPermission(String userId, String boardId);
+
+    /**
      * 获取板块内的帖子
      */
     List<Post> getPosts(String boardId, String tags, boolean showHidden, boolean withContent, boolean withReplies, int pageSize, int pageIndex);
