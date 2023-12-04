@@ -9,7 +9,7 @@ spring:
     mongodb:
       uri: mongodb://forum:rememberus...@10.80.42.189:27017/forum
   datasource:
-    url: jdbc:mysql://10.80.43.196:3306/forum_dev
+    url: jdbc:mysql://10.80.43.196:3306/forum
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: forum
     password: rememberus1nthed@yofend
@@ -44,6 +44,6 @@ forum:
     host: http://10.80.42.189:7700
     key: keI4qhrWElK6UqFt928AkKjDfIn1skn5cXcqP5sLaHo
   search-engine:
-    post: post_dev
+    post: post
 
 
