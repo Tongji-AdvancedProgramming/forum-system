@@ -3,13 +3,16 @@ package org.tongji.programming.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.tongji.programming.dto.ApiDataResponse;
+import org.tongji.programming.dto.ApiResponse;
+import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.pojo.Homework;
+import org.tongji.programming.pojo.HomeworkUploaded;
 import org.tongji.programming.service.HomeworkService;
+
+import java.util.List;
 
 /**
  * 作业控制器类
@@ -41,4 +44,42 @@ public class HomeworkController {
     ) {
         return ApiDataResponse.success(homeworkService.getHomework(term, hwId));
     }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "获取指定板块的已上传作业的信息"
+    )
+    @GetMapping("/uploaded")
+    public ApiDataResponse<List<HomeworkUploaded>> getHomeworkUploaded(
+            Authentication authentication,
+            @RequestParam String boardId,
+            @RequestParam boolean withHidden
+    ) {
+        if (withHidden) {
+            var authorities = authentication.getAuthorities();
+            // todo 换成admin
+            if (authorities.stream().noneMatch(a -> "ROLE_TA".equals(a.getAuthority()))) {
+                var resp = new ApiDataResponse<List<HomeworkUploaded>>();
+                resp.setCode(4003);
+                resp.setMsg("您无权查看隐藏的已上传作业");
+                return resp;
+            }
+        }
+
+        return ApiDataResponse.success(homeworkService.getHomeworkUploaded(boardId, withHidden));
+    }
+
+    // todo 换成admin
+    @Secured("ROLE_TA")
+    @Operation(
+            summary = "添加或更新已上传作业"
+    )
+    @PostMapping("/uploaded")
+    public ApiResponse postHomework(
+            @RequestBody HomeworkUploaded homeworkUploaded
+    ) {
+        homeworkService.postHomework(homeworkUploaded);
+        return ApiResponse.success();
+    }
+
 }

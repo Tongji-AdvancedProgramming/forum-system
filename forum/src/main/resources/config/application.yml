@@ -27,6 +27,7 @@ forum:
       upload: /user-upload/
       avatar: /user-avatar/
       cardBg: /user-card/
+      homework-upload: /homework-upload/
   user:
     default-avatar: http://10.80.43.196/s3/forum/user-default.png
   level:

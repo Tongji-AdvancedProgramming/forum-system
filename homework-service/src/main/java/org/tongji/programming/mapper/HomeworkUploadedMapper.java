@@ -10,6 +10,6 @@ import java.util.List;
 /**
  * @author cineazhan
  */
-public interface HomeworkMapper extends BaseMapper<Homework> {
+public interface HomeworkUploadedMapper extends BaseMapper<HomeworkUploaded> {
     List<HomeworkUploaded> selectHomeworkUploadedWeekly(@Param("term") String term, @Param("courseCode") String courseCode, @Param("week") Integer week, @Param("withHidden") boolean withHidden);
 }

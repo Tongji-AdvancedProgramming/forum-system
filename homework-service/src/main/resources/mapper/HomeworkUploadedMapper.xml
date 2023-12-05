@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.tongji.programming.mapper.HomeworkUploadedMapper">
+    <select id="selectHomeworkUploadedWeekly" resultType="org.tongji.programming.pojo.HomeworkUploaded">
+        select *
+        from homework_uploaded
+        where hwup_term = #{term}
+        and hwup_ccode = #{courseCode}
+        and hwup_week = #{week}
+        <if test="!withHidden">
+            and hwup_is_del = 0
+        </if>
+    </select>
+</mapper>
