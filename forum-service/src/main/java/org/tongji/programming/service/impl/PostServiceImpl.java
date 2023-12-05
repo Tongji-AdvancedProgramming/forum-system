@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
         var board = boardService.parseIdAndFetch(boardId);
 
         var post = new Post();
-        post.setPostTerm(board.getHomework().getHwTerm());
+        post.setPostTerm(board.getCourse().getCourseTerm());
         post.setPostCcode(board.getCourse().getCourseCode());
 
         switch (board.getLocation()) {
@@ -173,8 +173,6 @@ public class PostServiceImpl implements PostService {
                 post.setPostHwId(-1);
                 post.setPostWeek(board.getWeek());
                 post.setPostChapter(-1);
-
-                throw new NotImplementedException();
             }
             case HOMEWORK -> {
                 post.setPostHwId(board.getHomework().getHwId());
