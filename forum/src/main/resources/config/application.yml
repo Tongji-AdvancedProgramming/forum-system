@@ -1,6 +1,8 @@
-server:
-  port: 9002
 spring:
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
   data:
     redis:
       host: 10.80.42.189
@@ -8,11 +10,6 @@ spring:
       database: 12
     mongodb:
       uri: mongodb://forum:rememberus...@10.80.42.189:27017/forum
-  datasource:
-    url: jdbc:mysql://10.80.43.196:3306/forum
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: forum
-    password: rememberus1nthed@yofend
   servlet:
     multipart:
       max-file-size: 10MB
@@ -43,7 +40,5 @@ forum:
   meili:
     host: http://10.80.42.189:7700
     key: keI4qhrWElK6UqFt928AkKjDfIn1skn5cXcqP5sLaHo
-  search-engine:
-    post: post
 
 
