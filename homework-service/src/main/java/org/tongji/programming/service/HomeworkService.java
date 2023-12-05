@@ -19,5 +19,5 @@ public interface HomeworkService {
      */
     boolean postHomework(HomeworkUploaded homeworkUploaded, File file, String contentType, String filename, Long fileSize);
 
-    boolean postHomework(HomeworkUploaded homeworkUploaded);
+    String postHomework(HomeworkUploaded homeworkUploaded);
 }

@@ -9,7 +9,7 @@
         and hwup_ccode = #{courseCode}
         and hwup_week = #{week}
         <if test="!withHidden">
-            and hwup_is_del = 0
+            and hwup_is_del = '0'
         </if>
     </select>
 </mapper>

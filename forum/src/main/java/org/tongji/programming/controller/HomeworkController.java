@@ -57,8 +57,7 @@ public class HomeworkController {
     ) {
         if (withHidden) {
             var authorities = authentication.getAuthorities();
-            // todo 换成admin
-            if (authorities.stream().noneMatch(a -> "ROLE_TA".equals(a.getAuthority()))) {
+            if (authorities.stream().noneMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()))) {
                 var resp = new ApiDataResponse<List<HomeworkUploaded>>();
                 resp.setCode(4003);
                 resp.setMsg("您无权查看隐藏的已上传作业");
@@ -69,8 +68,7 @@ public class HomeworkController {
         return ApiDataResponse.success(homeworkService.getHomeworkUploaded(boardId, withHidden));
     }
 
-    // todo 换成admin
-    @Secured("ROLE_TA")
+    @Secured("ROLE_ADMIN")
     @Operation(
             summary = "添加或更新已上传作业"
     )
@@ -78,8 +76,12 @@ public class HomeworkController {
     public ApiResponse postHomework(
             @RequestBody HomeworkUploaded homeworkUploaded
     ) {
-        homeworkService.postHomework(homeworkUploaded);
-        return ApiResponse.success();
+        var result = homeworkService.postHomework(homeworkUploaded);
+        if (result.isEmpty()) {
+            return ApiResponse.success();
+        } else {
+            return ApiResponse.fail(5000, result);
+        }
     }
 
 }

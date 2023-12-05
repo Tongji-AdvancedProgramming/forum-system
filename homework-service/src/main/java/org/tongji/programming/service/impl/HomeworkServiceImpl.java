@@ -2,6 +2,7 @@ package org.tongji.programming.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.minio.MinioClient;
+import io.minio.StatObjectArgs;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.tongji.programming.service.HomeworkService;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +93,27 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public boolean postHomework(HomeworkUploaded homeworkUploaded) {
+    public String postHomework(HomeworkUploaded homeworkUploaded) {
+
+        // 如果出现文件名，检查正确性，并下载其内容和计算MD5
+        if (homeworkUploaded.getHwupFilename() != null) {
+            var objectName = homeworkUploaded.getHwupFilename();
+            if (objectName.startsWith("forum/")) {
+                objectName = objectName.substring(5);
+            }
+            try {
+                var stat = minioClient.statObject(
+                        StatObjectArgs.builder()
+                                .bucket(bucket)
+                                .object(objectName)
+                                .build()
+                );
+                homeworkUploaded.setHwupFilemd5(stat.etag());
+            } catch (Exception e) {
+                return "无法从存储系统中寻找到文件，请检查文件名填写是否正确";
+            }
+        }
+
         var keyWrapper = new QueryWrapper<HomeworkUploaded>()
                 .eq("hwup_term", homeworkUploaded.getHwupTerm())
                 .eq("hwup_ccode", homeworkUploaded.getHwupCcode())
@@ -100,6 +123,6 @@ public class HomeworkServiceImpl implements HomeworkService {
         } else {
             homeworkUploadedMapper.update(homeworkUploaded, keyWrapper);
         }
-        return true;
+        return "";
     }
 }
