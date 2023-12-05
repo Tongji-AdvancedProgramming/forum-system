@@ -25,25 +25,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/captcha")
 public class CaptchaController {
 
-    Captcha captcha;
-
-    @Autowired
-    public void setCaptcha(Captcha captcha) {
-        this.captcha = captcha;
-    }
-
     @GetMapping
     @Operation(summary = "获取一个验证码")
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CaptchaJakartaUtil.out(captcha, request, response);
+        CaptchaJakartaUtil.out(new GifCaptcha(130, 48, 4), request, response);
     }
 
     @PostMapping("/verify")
     @Operation(summary = "验证验证码")
-    public String verifyCaptcha(HttpServletRequest request, @RequestPart String code){
-        if(code!=null && CaptchaJakartaUtil.ver(code,request)){
+    public String verifyCaptcha(HttpServletRequest request, @RequestPart String code) {
+        if (code != null && CaptchaJakartaUtil.ver(code, request)) {
             return "Valid";
-        }else{
+        } else {
             return "Invalid";
         }
     }
