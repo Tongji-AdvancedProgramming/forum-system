@@ -6,6 +6,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: forum
     password: rememberus1nthed@yofend
+  data:
+    redis:
+      host: 10.80.42.189
+      password: rememberus
+      database: 13
 
 
 #logging:

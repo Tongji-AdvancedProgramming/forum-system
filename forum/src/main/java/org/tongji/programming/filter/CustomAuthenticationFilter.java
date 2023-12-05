@@ -91,7 +91,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             try {
                 var parts = request.getParts();
                 for (var part : parts) {
-                    if ("code".equals(part.getName()) && "text/plain".equals(part.getContentType())) {
+                    if ("code".equals(part.getName()) && ("text/plain".equals(part.getContentType()) || part.getContentType() == null)) {
                         try {
                             var stream = part.getInputStream();
                             var outStream = new StringWriter();

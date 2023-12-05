@@ -1,13 +1,11 @@
 package org.tongji.programming.controller;
 
 import io.springboot.captcha.GifCaptcha;
-import io.springboot.captcha.base.Captcha;
 import io.springboot.captcha.utils.CaptchaJakartaUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**

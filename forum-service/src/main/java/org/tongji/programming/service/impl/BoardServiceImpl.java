@@ -11,12 +11,7 @@ import org.tongji.programming.mapper.CourseMapper;
 import org.tongji.programming.mapper.HomeworkMapper;
 import org.tongji.programming.pojo.Course;
 import org.tongji.programming.pojo.Homework;
-import org.tongji.programming.pojo.Post;
 import org.tongji.programming.service.BoardService;
-import org.tongji.programming.service.PostService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author cinea

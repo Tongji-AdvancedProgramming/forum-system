@@ -4,10 +4,6 @@ spring:
   jackson:
     time-zone: GMT+8
   data:
-    redis:
-      host: 10.80.42.189
-      password: rememberus
-      database: 12
     mongodb:
       uri: mongodb://forum:rememberus...@10.80.42.189:27017/forum
   servlet:
