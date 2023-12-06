@@ -18,8 +18,6 @@ import org.tongji.programming.service.HomeworkService;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,9 +51,9 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public Homework getHomework(String term, Integer hwId) {
+    public Homework getHomework(String term, Integer hwId, String courseNo) {
         return homeworkMapper.selectOne(
-                new QueryWrapper<Homework>().eq("hw_term", term).eq("hw_id", hwId)
+                new QueryWrapper<Homework>().eq("hw_term", term).eq("hw_id", hwId).eq("hw_ccode", courseNo).last("limit 1")
         );
     }
 

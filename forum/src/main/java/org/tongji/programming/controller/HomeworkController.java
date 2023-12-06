@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.tongji.programming.dto.ApiDataResponse;
 import org.tongji.programming.dto.ApiResponse;
-import org.tongji.programming.dto.PostService.GetPostResponse;
 import org.tongji.programming.pojo.Homework;
 import org.tongji.programming.pojo.HomeworkUploaded;
 import org.tongji.programming.service.HomeworkService;
@@ -40,9 +39,10 @@ public class HomeworkController {
     @GetMapping
     public ApiDataResponse<Homework> getHomework(
             @RequestParam String term,
+            @RequestParam String courseNo,
             @RequestParam Integer hwId
     ) {
-        return ApiDataResponse.success(homeworkService.getHomework(term, hwId));
+        return ApiDataResponse.success(homeworkService.getHomework(term, hwId, courseNo));
     }
 
     @Secured("ROLE_USER")

@@ -10,7 +10,7 @@ import java.util.List;
  * @author cinea
  */
 public interface HomeworkService {
-    Homework getHomework(String term, Integer hwId);
+    Homework getHomework(String term, Integer hwId, String courseNo);
 
     List<HomeworkUploaded> getHomeworkUploaded(String boardId, boolean withHidden);
 
