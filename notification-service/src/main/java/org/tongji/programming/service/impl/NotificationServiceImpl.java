@@ -49,4 +49,18 @@ public class NotificationServiceImpl implements NotificationService {
             }
         }
     }
+
+    @Override
+    public void userReadAllNotification(String userId) {
+        var notifications = repository.findAllByReceiverAndRead(userId, false);
+        notifications.forEach(notification -> {
+            notification.setRead(true);
+            repository.save(notification);
+        });
+    }
+
+    @Override
+    public void userDeleteAllNotification(String userId) {
+        repository.deleteAllByReceiver(userId);
+    }
 }

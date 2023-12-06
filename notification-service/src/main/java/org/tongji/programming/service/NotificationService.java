@@ -22,4 +22,14 @@ public interface NotificationService {
      * 用户已读通知
      */
     void userReadNotification(String notificationId, String userId);
+
+    /**
+     * 用户已读所有通知
+     */
+    void userReadAllNotification(String userId);
+
+    /**
+     * 用户删除所有通知
+     */
+    void userDeleteAllNotification(String userId);
 }

@@ -244,9 +244,8 @@ public class PostServiceImpl implements PostService {
             var notification = Notification.builder()
                     .title("收到新回复")
                     .content(String.format(
-                            "%s收到新回复：%s",
-                            fatherPost.getPostAnswerId() == null ? "" : String.format("帖子《%s》", fatherPost.getPostTitle()),
-                            StringUtils.abbreviate(htmlCleaner.clean(newPost.getPostContent()).getText().toString(), "...", 20)
+                            "%s",
+                            StringUtils.abbreviate(htmlCleaner.clean(newPost.getPostContent()).getText().toString(), "...", 35)
                     ))
                     .type(NotificationType.REPLY)
                     .receiver(fatherPost.getPostSno())

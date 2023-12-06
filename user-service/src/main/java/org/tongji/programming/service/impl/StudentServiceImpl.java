@@ -39,7 +39,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getMe(String userId) {
-        return studentMapper.selectById(userId);
+        var result = studentMapper.selectById(userId);
+        result.setStuComment(null);
+        result.setStuPassword(null);
+        return result;
     }
 
     @Override

@@ -50,12 +50,38 @@ public class NotificationController {
             summary = "用户已读通知"
     )
     @PostMapping("/read")
-    public ApiResponse getMyNotifications(
+    public ApiResponse readMyNotifications(
             Principal principal,
             @RequestParam String notificationId
     ) {
         var userId = principal.getName();
         notificationService.userReadNotification(notificationId, userId);
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "用户已读所有通知"
+    )
+    @PostMapping("/readAll")
+    public ApiResponse readAllMyNotifications(
+            Principal principal
+    ) {
+        var userId = principal.getName();
+        notificationService.userReadAllNotification(userId);
+        return ApiResponse.success();
+    }
+
+    @Secured("ROLE_USER")
+    @Operation(
+            summary = "用户清除所有通知"
+    )
+    @DeleteMapping("/all")
+    public ApiResponse deleteAllMyNotifications(
+            Principal principal
+    ) {
+        var userId = principal.getName();
+        notificationService.userDeleteAllNotification(userId);
         return ApiResponse.success();
     }
 }

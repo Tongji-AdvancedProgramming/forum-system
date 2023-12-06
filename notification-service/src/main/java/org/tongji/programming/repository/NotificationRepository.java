@@ -17,4 +17,8 @@ public interface NotificationRepository extends MongoRepository<Notification, St
     void deleteAllByDateTimeBefore(LocalDateTime before);
 
     void deleteAllByDateTimeBeforeAndRead(LocalDateTime before, boolean read);
+
+    List<Notification> findAllByReceiverAndRead(String receiver, boolean read);
+
+    void deleteAllByReceiver(String receiver);
 }
