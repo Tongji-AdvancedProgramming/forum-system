@@ -111,7 +111,8 @@ public class BoardServiceImpl implements BoardService {
         var courseWrapper = new QueryWrapper<Course>();
         courseWrapper
                 .eq("course_term", board.getCourse().getCourseTerm())
-                .eq("course_code", board.getCourse().getCourseCode());
+                .eq("course_code", board.getCourse().getCourseCode())
+                .last("limit 1");
         var course = courseMapper.selectOne(courseWrapper);
 
         // 获取作业信息
